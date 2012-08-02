@@ -27,16 +27,16 @@ Function GetInput(cyc)
    EndIf
    ;get gamepad input
    If pControl(cyc)=2 Or pControl(cyc)=3
-    If JoyYDir()=-1 Then cUp(cyc)=1
-    If JoyYDir()=1 Then cDown(cyc)=1
-    If JoyXDir()=-1 Then cLeft(cyc)=1
-    If JoyXDir()=1 Then cRight(cyc)=1
-    If JoyDown(buttAttack) Then cAttack(cyc)=1
-    If JoyDown(buttRun) Then cRun(cyc)=1
-    If JoyDown(buttGrapple) Then cGrapple(cyc)=1
-    If JoyDown(buttPickUp) Then cPickUp(cyc)=1
-    If JoyDown(buttSwitch) Then cSwitch(cyc)=1
-    If JoyDown(buttTaunt) Then cTaunt(cyc)=1
+    If JoyYDir(pJoystick(cyc))=-1 Then cUp(cyc)=1
+    If JoyYDir(pJoystick(cyc))=1 Then cDown(cyc)=1
+    If JoyXDir(pJoystick(cyc))=-1 Then cLeft(cyc)=1
+    If JoyXDir(pJoystick(cyc))=1 Then cRight(cyc)=1
+    If JoyDown(buttAttack,pJoystick(cyc)) Then cAttack(cyc)=1
+    If JoyDown(buttRun,pJoystick(cyc)) Then cRun(cyc)=1
+    If JoyDown(buttGrapple,pJoystick(cyc)) Then cGrapple(cyc)=1
+    If JoyDown(buttPickUp,pJoystick(cyc)) Then cPickUp(cyc)=1
+    If JoyDown(buttSwitch,pJoystick(cyc)) Then cSwitch(cyc)=1
+    If JoyDown(buttTaunt,pJoystick(cyc)) Then cTaunt(cyc)=1
     If cGrapple(cyc)=1 And (cAttack(cyc)=1 Or cPickUp(cyc)=1) Then cBlock(cyc)=1
    EndIf
   EndIf

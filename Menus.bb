@@ -1135,9 +1135,13 @@ While go=0
 	     If no_plays>1 And (CountSelected()<no_plays Or charSelected(char)=>0)
 	      PlaySound sMenuBrowse : keytim=8
 	      charSelected(char)=charSelected(char)+1
-	      If charSelected(char)=1 And ControlUsed(char,1) Then charSelected(char)=charSelected(char)+1
-	      If charSelected(char)=2 And ControlUsed(char,2) Then charSelected(char)=charSelected(char)+1
-	      If charSelected(char)>2 Then charSelected(char)=-1
+	      
+	      ;Addding control 2 (Joystick 1) to 5 (Joystick 4)
+		  For ctrl=1 To 5
+			If charSelected(char)=ctrl And ControlUsed(char,ctrl) Then charSelected(char)=charSelected(char)+1
+		  Next 
+
+	      If charSelected(char)>5 Then charSelected(char)=-1
 	     EndIf
 	    EndIf
 	   EndIf
@@ -1207,6 +1211,7 @@ While go=0
 	;bind controls to player (or remove)
 	For cyc=1 To no_plays
 	 pControl(cyc)=0
+	 pJoystick(cyc)=0 ;default to joystick #1
 	 If screenAgenda=11 And charSelected(pChar(cyc))=>0
 	  If optCupControl=>3 And optCupControl=<4 Then charSelected(pChar(cyc))=2
 	  If optCupControl=5
@@ -1216,7 +1221,15 @@ While go=0
 	  EndIf
 	 EndIf
 	 If charSelected(pChar(cyc))=-1 Then pChar(cyc)=0 
-	 If charSelected(pChar(cyc))>0 Then pControl(cyc)=charSelected(pChar(cyc))
+	 If charSelected(pChar(cyc))>0
+		If(charSelected(pChar(cyc))>=2)
+			;Joystick
+			pControl(cyc)=2
+			pJoystick(cyc)=charSelected(pChar(cyc))-2
+		Else
+			pControl(cyc)=charSelected(pChar(cyc))
+		EndIf
+	 EndIf
 	Next
 	
 	;SCROLLING
@@ -1348,7 +1361,7 @@ While go=0
    If InjuryStatus(char)>0 Then DrawImage gMenu(10-highlight),x,y+1
    If charSelected(char)=0 And no_plays>1 Then Color 200,0,0 : Rect x-90,y-16,179,28,1
    If charSelected(char)=1 And no_plays>1 Then Color 0,0,200 : Rect x-90,y-16,179,28,1
-   If charSelected(char)=2 And no_plays>1 Then Color 175,0,175 : Rect x-90,y-16,179,28,1 
+   If charSelected(char)>=2 And no_plays>1 Then Color 175,0,175 : Rect x-90,y-16,179,28,1 
    If screenAgenda=7 And charRelationship(editChar,char)<0 Then Color 225,0,0 : Rect x-90,y-16,179,28,1
    If screenAgenda=7 And charRelationship(editChar,char)>0 Then Color 0,225,0 : Rect x-90,y-16,179,28,1
    If screenAgenda=8 And charRealRelationship(editChar,char)<0 Then Color 225,0,0 : Rect x-90,y-16,179,28,1
@@ -1388,7 +1401,14 @@ While go=0
     Outline(InjuryStatus(char),x-75,y-1,0,0,0,250,165,165)
    EndIf
    If charSelected(char)=>0 And no_plays>1
-    DrawImage gControl(charSelected(char)),x-67,y+1
+    If(charSelected(char) >= 2)
+		DrawImage gControl(2),x-67,y+1
+		SetFont font(2)
+		Color 0, 255, 255
+		Text x-58,y-8,charSelected(char)-1,1,1
+	Else
+		DrawImage gControl(charSelected(char)),x-67,y+1		
+	EndIf
     If screenAgenda=11
      For v=1 To optCupSize
       If optCupTeams=0 And char=pChar(v) Then SetFont font(4) : Outline("P"+v,x-75,y+1,0,0,0,250,200,100)

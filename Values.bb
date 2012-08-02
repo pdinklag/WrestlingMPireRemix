@@ -1329,6 +1329,7 @@ Dim pSubmitDelay(optPlayLim)
 Dim pDQDelay(optPlayLim)
 ;input
 Dim pControl(optPlayLim)
+Dim pJoystick(optPlayLim) ;when pControl is 2 (joystick), this determines the joystick INDEX (0 to 3)
 Dim pController(optPlayLim)
 Dim cUp(optPlayLim)
 Dim cDown(optPlayLim)
