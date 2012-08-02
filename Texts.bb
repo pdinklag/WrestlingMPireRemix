@@ -288,6 +288,7 @@ textMatch$(17)="Sumo Match"
 textMatch$(18)="Escape Challenge"
 textMatch$(19)="Six-Man Tag"
 textMatch$(20)="Eight-Man Elimination"
+textMatch$(21)="Tables Match"
 ;match gimmicks
 Dim textGimmick$(20)
 textGimmick$(0)="None"

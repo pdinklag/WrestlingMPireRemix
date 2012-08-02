@@ -882,6 +882,7 @@ Function GetMatchRules(match)
  matchPreset=match
  matchLocation=0
  matchShoot=0
+ matchTables=0
  ;confrontation
  If match=0 Then matchLocation=Rnd(1,2)
  If match=<1
@@ -1002,6 +1003,17 @@ Function GetMatchRules(match)
   no_wrestlers=8 : no_refs=1 : matchType=5 : matchRules=2 : matchTeams=2
   matchPins=1 : matchSubs=1 : matchKOs=0 : matchBlood=0 : matchCountOuts=2
   matchTimeLim=0 
+ EndIf
+ ;tables match
+ If match=21
+  no_wrestlers=2 : no_refs=1 : matchType=5 : matchRules=0 : matchTeams=0
+  matchPins=0 : matchSubs=0 : matchKOs=0 : matchBlood=0 : matchCountOuts=0 : matchTables=1
+  matchTimeLim=0
+
+  ;mostly wooden tables, mostly ringside
+  no_items=20
+  itemSelection=2
+  itemLayout=3
  EndIf
  ;time limit filter
  If matchTimeLim>0 And matchTeams=>0

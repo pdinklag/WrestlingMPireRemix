@@ -156,7 +156,7 @@ Dim hiExperience(10)
 .Matches
 ;rules
 Global no_wrestlers=2,no_refs=1,no_plays
-Global matchPreset,no_matches=20,no_gimmicks=13
+Global matchPreset,no_matches=21,no_gimmicks=13
 Global matchOldState,matchState=2 ;0=intro, 1=entrances, 2=pre-match promos, 3=active, 4=over
 Global matchEntrances,matchEnter
 Global matchMins,matchLastMin,matchSecs=0,matchClock
