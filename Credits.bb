@@ -323,7 +323,7 @@ While go=0
  ;version ID
  SetFont font(2) 
  Color 100,100,100
- Text rX#(400)+175,rY#(135)+60,"v2.5",0,1
+ Text rX#(400)+175,rY#(135)+60,"v2.5 [pdinklag]",0,1
  ;cursor
  If foc<>oldfoc Then oldfoc=foc : PlaySound sMenuSelect  
  DrawImage gCursor,MouseX(),MouseY()
