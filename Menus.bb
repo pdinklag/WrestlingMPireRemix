@@ -1643,7 +1643,7 @@ Function MatchSetup()
 ;frame rating
 timer=CreateTimer(30)
 ;MAIN LOOP
-foc=13 : oldfoc=foc
+foc=14 : oldfoc=foc
 go=0 : gotim=0 : keytim=20
 While go=0
 
@@ -1662,9 +1662,9 @@ While go=0
 	 If KeyDown(1) Then go=-1
 	 ;proceed
 	 If KeyDown(28) Or ButtonPressed() Or MouseDown(1)
-	  If foc<13 And MouseDown(1)=0 Then foc=13 : keytim=10 
-	  If foc=13 And keytim=0 Then go=1
-	  If foc=14 Then go=-1 
+	  If foc<14 And MouseDown(1)=0 Then foc=14 : keytim=10 
+	  If foc=14 And keytim=0 Then go=1
+	  If foc=15 Then go=-1 
 	 EndIf
 	EndIf
 	;music
@@ -1676,8 +1676,8 @@ While go=0
 	 ;highlight options
 	 If KeyDown(200) Or JoyYDir()=-1 Then foc=foc-1 : keytim=5
 	 If KeyDown(208) Or JoyYDir()=1 Then foc=foc+1 : keytim=5
-	 If foc>13 Then foc=1
-	 If foc<1 Then foc=13
+	 If foc>14 Then foc=1
+	 If foc<1 Then foc=14
 	 ;browse left
 	 If KeyDown(203) Or JoyXDir()=-1 Or MouseDown(2)
 	  If foc=>1 And foc=<12 Then PlaySound sMenuBrowse : keytim=5
@@ -1691,8 +1691,9 @@ While go=0
       If foc=8 Then matchSubs=matchSubs-1
       If foc=9 Then matchKOs=matchKOs-1
       If foc=10 Then matchBlood=matchBlood-1
-      If foc=11 Then matchCountOuts=matchCountOuts-1
-      If foc=12 Then matchTimeLim=matchTimeLim-1
+      If foc=11 Then matchTables=matchTables-1
+      If foc=12 Then matchCountOuts=matchCountOuts-1
+      If foc=13 Then matchTimeLim=matchTimeLim-1
 	 EndIf
 	 ;browse right
 	 If KeyDown(205) Or JoyXDir()=1 Or MouseDown(1)
@@ -1709,8 +1710,9 @@ While go=0
       If foc=8 Then matchSubs=matchSubs+1
       If foc=9 Then matchKOs=matchKOs+1
       If foc=10 Then matchBlood=matchBlood+1
-      If foc=11 Then matchCountOuts=matchCountOuts+1
-      If foc=12 Then matchTimeLim=matchTimeLim+1
+      If foc=11 Then matchTables=matchTables+1
+      If foc=12 Then matchCountOuts=matchCountOuts+1
+      If foc=13 Then matchTimeLim=matchTimeLim+1
 	 EndIf
 	 ;revert to match presets
 	 If KeyDown(14)
@@ -1742,7 +1744,9 @@ While go=0
 	If matchSubs<0 Then matchSubs=1
     If matchSubs>1 Then matchSubs=0	
 	If matchKOs<0 Then matchKOs=1
-	If matchKOs>1 Then matchKOs=0	
+	If matchKOs>1 Then matchKOs=0
+	If matchTables<0 Then matchTables=1
+	If matchTables>1 Then matchTables=0	
 	If matchBlood<0 Then matchBlood=1
 	If matchBlood>1 Then matchBlood=0
 	If matchCountOuts<0 Then matchCountOuts=3
@@ -1776,13 +1780,14 @@ While go=0
  DrawOption(8,rX#(400),rY#(y),"Submissions",textCount$(matchSubs)) : y=y+32
  DrawOption(9,rX#(400),rY#(y),"Knock-Out's",textCount$(matchKOs)) : y=y+32
  DrawOption(10,rX#(400),rY#(y),"Bleeding",textCount$(matchBlood)) : y=y+32
- DrawOption(11,rX#(400),rY#(y),"Count-Out's",textCountOuts$(matchCountOuts)) : y=y+36
+ DrawOption(11,rX#(400),rY#(y),"Tables",textCount$(matchTables)) : y=y+32
+ DrawOption(12,rX#(400),rY#(y),"Count-Out's",textCountOuts$(matchCountOuts)) : y=y+36
  If matchTeams=-1 Then header$="Entrance Interval" Else header$="Time Limit"
  If matchTimeLim=0 Then namer$="None"
  If matchTimeLim=1 Then namer$=matchTimeLim+"min"
  If matchTimeLim>1 Then namer$=matchTimeLim+"mins"
- DrawOption(12,rX#(400),rY#(y),header$,namer$)
- DrawOption(13,rX#(400),rY#(560),">>> PROCEED >>>","") 
+ DrawOption(13,rX#(400),rY#(y),header$,namer$) : y=y+36
+ DrawOption(14,rX#(400),rY#(y),">>> PROCEED >>>","") 
  ;cursor
  If foc<>oldfoc Then oldfoc=foc : PlaySound sMenuSelect  
  DrawImage gCursor,MouseX(),MouseY()

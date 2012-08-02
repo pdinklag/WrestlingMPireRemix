@@ -1021,6 +1021,7 @@ Function DisplayPromo()
    If matchBlood=1 Then greenLineB$="Excessive bleeding WILL be counted..."
    If promoTim<1075 And promoReact(4)=0 Then Pop(0,5-matchKOs,0) : promoReact(4)=1
   EndIf
+  ;TODO: say something about tables match stipulation
   If promoTim>750 And promoTim<950
    Speak(promoActor(3),2,-1)
    If matchCage=0 And matchCountOuts=0

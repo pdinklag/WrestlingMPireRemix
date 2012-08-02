@@ -1557,6 +1557,11 @@ Function FindSmashes(cyc,level#,task) ;0=humans & items (ie. all), weapons & ite
      pain=pain*2
     EndIf
     pHealth(cyc)=pHealth(cyc)-pain
+	If broken=0 And matchTables=1 And (iType(v)=1 Or iType(v)=2) And LegalMan(cyc)
+		;This poor guy just crashed through a wooden or metal table in a tables match - ELIMINATE
+		matchWinStyle=5 ;generic elimination
+		DeclareFall(pRefAward(cyc), cyc)
+	EndIf
     If AttackViable(cyc)<3 Then pDT(cyc)=pDT(cyc)+Rnd(pain/4,pain/2)
     If EntertainViable(cyc,0) Then entScore=entScore+(pain/2) : entHardcore=entHardcore+pain
     If pAnim(cyc)=43 Or pAnim(cyc)=50 Or pAnim(cyc)=51 Or pAnim(cyc)=52 Or pAnim(cyc)=54 Or pAnim(cyc)=56 Or (pAnim(cyc)=>60 And pAnim(cyc)=<73) Or pAnim(cyc)=234

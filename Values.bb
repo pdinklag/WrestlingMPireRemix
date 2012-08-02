@@ -164,7 +164,7 @@ Global matchPause,matchTim,matchCountTim
 Global matchTimeLim=10
 Global matchRules=1 ;0=hardcore, 1=in ring, 2=in ring strict
 Global matchShoot,matchType=1 ;0=none, 1=first fall wins, 2=best of 3, 3=ironman, 4=last fall, 5=elimination
-Global matchPins=1,matchSubs=1,matchKOs=0,matchBlood=0
+Global matchPins=1,matchSubs=1,matchKOs=0,matchBlood=0,matchTables=0
 Global matchCounter,matchCountOuts=1 ;0=none, 1=fast count, 2=slow count, 3=elimination/victory
 Global matchTeams=0 ;-1=sequential, 0=individuals, 1=teams, 2=tag teams
 Global matchBellTim,matchWinStyle ;0=forfeit, 1=pin, 2=submit, 3=KO, 4=blood, 5=OTT, 6=DQ, 7=awarded decision
