@@ -53,6 +53,7 @@ Global optCrowdAnim=2 ;0=static, 1=animated, 2=+signs
 ;keys & buttons
 Global keyAttack=30,keyGrapple=31,keyRun=44,keyPickUp=45,keySwitch=29,keyTaunt=57
 Global buttAttack=1,buttGrapple=2,buttRun=3,buttPickUp=4,buttSwitch=5,buttTaunt=7
+Global buttSelect=6 ;Joystick button to select another wrestler (for multiple joysticks!)
 Global controlTim
 ;online
 Global optOnline=0 ;0=none, 1=join, 2=host
@@ -171,6 +172,11 @@ Global matchBellTim,matchWinStyle ;0=forfeit, 1=pin, 2=submit, 3=KO, 4=blood, 5=
 Global matchRemaining,matchSurvivor
 Global matchWinner,matchLoser,matchLeader
 Global matchPlayer,matchMulti,matchReferee
+
+;Joystick player map
+Global no_joys=4
+Dim joyPlayer(4)
+
 Global matchIntruder,matchBetrayal
 Global matchDamage,matchWeapon
 ;gimmicks

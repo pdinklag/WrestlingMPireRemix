@@ -419,7 +419,7 @@ While go=0
 	 If KeyDown(1) Then go=-1
 	 ;proceed
 	 If KeyDown(28) Or ButtonPressed() Or MouseDown(1)
-	  If foc=8 Then go=1
+	  If foc=9 Then go=1
 	 EndIf
 	EndIf
 	;music
@@ -430,22 +430,23 @@ While go=0
 	 ;highlight options
 	 If KeyDown(200) Or JoyYDir()=-1 Then foc=foc-1 : keytim=5
 	 If KeyDown(208) Or JoyYDir()=1 Then foc=foc+1 : keytim=5
-	 If foc<1 Then foc=8
-	 If foc>8 Then foc=1
+	 If foc<1 Then foc=9
+	 If foc>9 Then foc=1
 	 ;activate
 	 If KeyDown(28) Or ButtonPressed() Or MouseDown(1)
 	  ;enter new command
-	  If foc=<6
+	  If foc=<7
 	   PlaySound sMenuBrowse : keytim=20
 	   callX=MouseX() : callY=MouseY()
 	   screenCall=foc
 	  EndIf
 	  ;restore defaults
-	  If foc=7
+	  If foc=8
 	   PlaySound sTrash : keytim=20
 	   buttAttack=1 : buttGrapple=2
 	   buttRun=3 : buttPickUp=4
 	   buttSwitch=5 : buttTaunt=7
+	   buttSelect=6
 	  EndIf
 	 EndIf 
 	EndIf   
@@ -458,6 +459,7 @@ While go=0
      If screenCall=4 Then buttPickUp=AssignButton(buttPickUp)
      If screenCall=5 Then buttSwitch=AssignButton(buttSwitch)
      If screenCall=6 Then buttTaunt=AssignButton(buttTaunt)
+     If screenCall=7 Then buttSelect=AssignButton(buttSelect)
     EndIf
 	
  UpdateWorld
@@ -482,9 +484,11 @@ While go=0
  If screenCall=5 Then namer$="Press New Button" Else namer$="Button "+buttSwitch
  DrawOption(5,rX#(400),rY#(y),"Switch Focus",namer$) : y=y+35
  If screenCall=6 Then namer$="Press New Button" Else namer$="Button "+buttTaunt
- DrawOption(6,rX#(400),rY#(y),"Taunt / Pin",namer$) : y=y+50
- DrawOption(7,rX#(400),rY#(y),"RESTORE DEFAULTS","")
- DrawOption(8,rX#(400),rY#(560),"<<< BACK <<<","")
+ DrawOption(6,rX#(400),rY#(y),"Taunt / Pin",namer$) : y=y+35
+ If screenCall=7 Then namer$="Press New Button" Else namer$="Button "+buttSelect
+ DrawOption(7,rX#(400),rY#(y),"Select Wrestler",namer$) : y=y+50
+ DrawOption(8,rX#(400),rY#(y),"RESTORE DEFAULTS","")
+ DrawOption(9,rX#(400),rY#(560),"<<< BACK <<<","")
  ;cursor
  If foc<>oldfoc Then oldfoc=foc : PlaySound sMenuSelect  
  DrawImage gCursor,MouseX(),MouseY()

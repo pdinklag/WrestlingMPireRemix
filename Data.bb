@@ -49,7 +49,8 @@ Function SaveOptions()
   WriteInt file,buttPickUp
   WriteInt file,buttSwitch
   WriteInt file,buttTaunt
-  ;future proofing
+  WriteInt file,buttSelect
+  ;future proofing - thanks MDickie!
   For count=1 To 1000
    WriteInt file,0
   Next
@@ -99,6 +100,7 @@ Function LoadOptions()
   buttPickUp=ReadInt(file)
   buttSwitch=ReadInt(file)
   buttTaunt=ReadInt(file)
+  buttSelect=ReadInt(file)
  CloseFile(file)
 End Function
 
