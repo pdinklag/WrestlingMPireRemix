@@ -298,6 +298,9 @@ While go=0
   If keytim<1 Then keytim=0
   controlTim=controlTim-1
   If controlTim<0 Then controlTim=0 
+  For j=1 To 4
+    If joyControlTim(j)>0 Then joyControlTim(j) = joyControlTim(j) - 1
+  Next
   speedTim=speedTim-1
   If speedTim<0 Then speedTim=0 
   ;store old match/cam states
@@ -443,16 +446,20 @@ While go=0
      If ChannelPlaying(chTheme) Then StopChannel chTheme
      PostMessage("Match has been restarted!")
     EndIf
-    ;switch character
+    ;switch character (keyboard)
     If KeyDown(15) And screenAgenda<>12 And optOnline=0
      newbie=matchPlayer
      Repeat 
       newbie=newbie+1 : satisfied=1
-      If newbie>no_plays Then newbie=1
-      If pOutTim(newbie)=0 Then satisfied=0
-      If pControl(newbie)>0 Then satisfied=0
-      If game=1 And charFed(pChar(newbie))<>charFed(gamChar) Then satisfied=0
-      If pHidden(newbie)>0 Or (pEliminated(newbie) And optHideElim>0) Then satisfied=0 
+      If newbie>no_plays
+        If matchPlayer=0 Then newbie=0 Else newbie=1
+      EndIf
+      If(newbie > 0)
+        If pOutTim(newbie)=0 Then satisfied=0
+        If pControl(newbie)>0 Then satisfied=0
+        If game=1 And charFed(pChar(newbie))<>charFed(gamChar) Then satisfied=0
+        If pHidden(newbie)>0 Or (pEliminated(newbie) And optHideElim>0) Then satisfied=0 
+      EndIf
      Until satisfied=1 Or newbie=matchPlayer
      If newbie<>matchPlayer
       PlaySound sSwing : keytim=10
@@ -460,6 +467,40 @@ While go=0
       controlTim=100
       PostMessage("You are now controlling "+charName$(pChar(newbie))+"!")
      EndIf
+    EndIf
+    ;switch character (joysticks)
+    If screenAgenda<>12 And optOnline=0
+      For j=1 To 4
+        If JoyDown(buttSelect, j-1)
+          newbie=joyPlayer(j)
+          Repeat
+            newbie=newbie+1 : satisfied=1
+            If newbie>no_plays
+              If joyPlayer(j)=0 Then newbie=0 Else newbie=1
+            EndIf
+            If(newbie > 0)
+              If pOutTim(newbie)=0 Then satisfied=0
+              If pControl(newbie)>0 Then satisfied=0
+              If game=1 And charFed(pChar(newbie))<>charFed(gamChar) Then satisfied=0
+              If pHidden(newbie)>0 Or (pEliminated(newbie) And optHideElim>0) Then satisfied=0 
+            EndIf
+          Until satisfied=1 Or newbie=joyPlayer(j)
+
+          If newbie<>joyPlayer(j)
+            ;Transfer control
+            old=joyPlayer(j)
+            joyPlayer(j)=newbie
+            pControl(newbie)=2
+            pJoystick(newbie)=j-1
+            pControl(old)=0
+            
+            keytim=10
+            joyControlTim(j)=100
+            PlaySound sSwing
+            PostMessage("Player " + j + " is now controlling " + charName$(pChar(newbie)) + "!");
+          EndIf
+        EndIf
+      Next
     EndIf
    EndIf
 
@@ -1760,6 +1801,9 @@ Function DrawMeter(cyc,x,y)
  ;name 
  r=255 : g=255 : b=255
  If controlTim>0 And cyc=matchPlayer Then r=200 : g=200 : b=255
+ For j = 1 To 4
+   If joyControlTim(j) > 0 And pControl(cyc)=2 And pJoystick(cyc)=j-1 Then r=200 : g=200 : b=255
+ Next
  If LegalMan(cyc)=0 Then r=r-(r/fader) : g=g-(g/fader) : b=b-(b/fader)
  namer$=charName$(pChar(cyc))
  If optOnline>0 And pController(cyc)>0 Then namer$=NetPlayerName$(pController(cyc))

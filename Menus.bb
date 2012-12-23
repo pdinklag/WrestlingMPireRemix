@@ -1230,6 +1230,7 @@ While go=0
 			;Joystick
 			pControl(cyc)=2
 			pJoystick(cyc)=charSelected(pChar(cyc))-2
+			joyPlayer(pJoystick(cyc))=cyc
 		Else
 			pControl(cyc)=charSelected(pChar(cyc))
 		EndIf

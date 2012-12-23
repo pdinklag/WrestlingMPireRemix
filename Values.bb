@@ -174,8 +174,8 @@ Global matchWinner,matchLoser,matchLeader
 Global matchPlayer,matchMulti,matchReferee
 
 ;Joystick player map
-Global no_joys=4
 Dim joyPlayer(4)
+Dim joyControlTim(4)
 
 Global matchIntruder,matchBetrayal
 Global matchDamage,matchWeapon

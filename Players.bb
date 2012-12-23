@@ -562,6 +562,9 @@ Function DisplayLabels(cyc)
   EndIf 
  EndIf
  If controlTim>0 And pControl(cyc)>0 Then label=labControl
+ For j = 1 To 4
+   If joyControlTim(j) > 0 And pControl(cyc)=2 And pJoystick(cyc)=j-1 Then label=labControl
+ Next
  ;pinning status
  If matchState=3 And pRole(cyc)=0 And no_refs=0 And pPinning(cyc)>0 
   If pPinCount(pPinning(cyc))>0 Then label=labCount(pPinCount(pPinning(cyc))) ;pinner
