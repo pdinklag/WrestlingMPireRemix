@@ -628,7 +628,12 @@ While go=0
 	   For v=1 To no_wrestlers
 	    If pControl(matchEnter)=0 And pControl(v)>0 And pEliminated(v) 
 	     pControl(matchEnter)=pControl(v) : pControl(v)=0
+	     pJoystick(matchEnter)=pJoystick(v) : pJoystick(v)=0
+	
 	     If v=matchPlayer Then matchPlayer=matchEnter
+	     For j=1 To 4
+		  If v=joyPlayer(j) Then joyPlayer(j)=matchEnter
+		 Next
 	     If v=camFoc Then camFoc=matchEnter
 	    EndIf
 	   Next
