@@ -40,6 +40,11 @@ Include "Promos.bb"
 
 ;INITIATE ENGINE 
 LoadOptions()
+
+;PARSE COMMAND LINE
+cmd$=CommandLine()
+If(Instr(cmd$, "-win") > 0) Then optWindow=1
+
 optOnline=0;StartNetGame()
 ChangeResolution(optMenuRes,0)
 SetBuffer BackBuffer()
