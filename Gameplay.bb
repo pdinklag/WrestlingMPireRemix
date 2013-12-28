@@ -43,7 +43,7 @@ LoadOptions()
 
 ;PARSE COMMAND LINE
 cmd$=CommandLine()
-If(Instr(cmd$, "-win") > 0) Then optWindow=1
+If Instr(cmd$, "-win")>0 Then optWindow=1
 
 optOnline=0;StartNetGame()
 ChangeResolution(optMenuRes,0)
@@ -55,8 +55,27 @@ MoveMouse rX#(650),rY#(500)
 SeedRnd(MilliSecs())   
 
 ;LOADING PROCESS
+;prepare images
+size=8
+For count=0 To 16
+ font(count)=LoadFont("Comic Book Normal.ttf",size,0,0,0)
+ size=size+2
+Next 
+gBackground=LoadImage("Graphics/Background.png")
+MaskImage gBackground,255,0,255
+ResizeImage gBackground,GraphicsWidth(),GraphicsHeight()
+gLogo(1)=LoadImage("Graphics/Logo01.png")
+MaskImage gLogo(1),255,0,255
+gMDickie=LoadImage("Graphics/MDickie.png")
+MaskImage gMDickie,255,0,255
+For count=1 To 8
+ gMenu(count)=LoadImage("Graphics/Menus/Menu0"+count+".png")
+ MaskImage gMenu(count),255,0,255
+Next
+
 ;start intro
-Intro()
+If Instr(cmd$, "-nointro")=0 Then Intro()
+
 ;load media
 LoadMusic()
 LoadImages()

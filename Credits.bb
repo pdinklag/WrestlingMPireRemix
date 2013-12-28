@@ -6,23 +6,6 @@
 ;--------------------------------- INTRO --------------------------------------
 ;//////////////////////////////////////////////////////////////////////////////
 Function Intro()
-;prepare images
-size=8
-For count=0 To 16
- font(count)=LoadFont("Comic Book Normal.ttf",size,0,0,0)
- size=size+2
-Next 
-gBackground=LoadImage("Graphics/Background.png")
-MaskImage gBackground,255,0,255
-ResizeImage gBackground,GraphicsWidth(),GraphicsHeight()
-gLogo(1)=LoadImage("Graphics/Logo01.png")
-MaskImage gLogo(1),255,0,255
-gMDickie=LoadImage("Graphics/MDickie.png")
-MaskImage gMDickie,255,0,255
-For count=1 To 8
- gMenu(count)=LoadImage("Graphics/Menus/Menu0"+count+".png")
- MaskImage gMenu(count),255,0,255
-Next
 ;prepare textures
 For count=1 To 5
  tCrowd(count)=LoadTexture("World/Sprites/Crowd0"+count+".png",4)
