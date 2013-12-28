@@ -435,52 +435,56 @@ End Function
 ;-------------------------------- 6. OUTRO ------------------------------------
 ;//////////////////////////////////////////////////////////////////////////////
 Function Outro()
-;reset theme
-;ChannelVolume chTheme,0.5
-;frame rating
-timer=CreateTimer(30)
-;MAIN LOOP
-go=0 : gotim=0 : keytim=20
-While go=0
 
- Cls
- frames=WaitTimer(timer)
- For framer=1 To frames
+If Instr(CommandLine(), "-nooutro")=0
+	;reset theme
+	;ChannelVolume chTheme,0.5
+	;frame rating
+	timer=CreateTimer(30)
+	;MAIN LOOP
+	go=0 : gotim=0 : keytim=20
+	While go=0
 	
-	;PORTAL
-    gotim=gotim+1
-	If gotim>50
-	 If KeyDown(1) Or KeyDown(28) Or ButtonPressed() Or MouseDown(1) Or gotim>500 Then go=1
-	EndIf  
-	;music
-	ManageMusic(-1)  
+	 Cls
+	 frames=WaitTimer(timer)
+	 For framer=1 To frames
+		
+		;PORTAL
+	    gotim=gotim+1
+		If gotim>50
+		 If KeyDown(1) Or KeyDown(28) Or ButtonPressed() Or MouseDown(1) Or gotim>500 Then go=1
+		EndIf  
+		;music
+		ManageMusic(-1)  
+		
+	 UpdateWorld
+	 Next
+	 RenderWorld 1
 	
- UpdateWorld
- Next
- RenderWorld 1
-
- ;DISPLAY
- DrawImage gBackground,rX#(400),rY#(300)
- DrawImage gOutro,rX#(400),rY#(360)
- DrawImage gLogo(1),rX#(400),rY#(135)
- DrawImage gMDickie,rX#(400),rY#(520) 
- ;message
- y=337
- SetFont font(12)
- Outline("Follow all the latest developments",rX#(400),rY#(360)-45,0,0,0,255,255,255)
- Outline("and connect with other fans at",rX#(400),rY#(360),0,0,0,255,255,255)
- Outline("www.facebook.com/MDickieFans",rX#(400),rY#(360)+45,0,0,0,255,255,255)
- ;Outline("Keep your career up to date",rX#(400),rY#(360)-45,0,0,0,255,255,255)
- ;Outline("with all the latest downloads",rX#(400),rY#(360),0,0,0,255,255,255)
- ;Outline("from www.MDickie.com!",rX#(400),rY#(360)+45,0,0,0,255,255,255)
-
- Flip
- ;screenshot (F12)
- If KeyHit(88) Then Screenshot()
-
+	 ;DISPLAY
+	 DrawImage gBackground,rX#(400),rY#(300)
+	 DrawImage gOutro,rX#(400),rY#(360)
+	 DrawImage gLogo(1),rX#(400),rY#(135)
+	 DrawImage gMDickie,rX#(400),rY#(520) 
+	 ;message
+	 y=337
+	 SetFont font(12)
+	 Outline("Follow all the latest developments",rX#(400),rY#(360)-45,0,0,0,255,255,255)
+	 Outline("and connect with other fans at",rX#(400),rY#(360),0,0,0,255,255,255)
+	 Outline("www.facebook.com/MDickieFans",rX#(400),rY#(360)+45,0,0,0,255,255,255)
+	 ;Outline("Keep your career up to date",rX#(400),rY#(360)-45,0,0,0,255,255,255)
+	 ;Outline("with all the latest downloads",rX#(400),rY#(360),0,0,0,255,255,255)
+	 ;Outline("from www.MDickie.com!",rX#(400),rY#(360)+45,0,0,0,255,255,255)
+	
+	 Flip
+	 ;screenshot (F12)
+	 If KeyHit(88) Then Screenshot()
+	
 Wend
+	FreeTimer timer
+EndIf
+
 ;leave
-FreeTimer timer
 SaveOptions()
 SaveUniverse()
 SaveProgress(slot)
