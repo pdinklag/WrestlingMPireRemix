@@ -1228,7 +1228,8 @@ Dim pOldFoc(optPlayLim)
 Dim pWeapFoc(optPlayLim)
 Dim pItemFoc(optPlayLim)
 Dim pFocTim(optPlayLim)
-Dim pOutTim(optPlayLim)
+Dim pOutTim(optPlayLim) ;0=inactive, 1=active behind curtain, 2=stepped through curtain, >100=RefViable
+Dim pEntranceTim(optPlayLim) ;for timed battle royals - if players didn't enter the ring after a while, force ref viability
 Dim pX#(optPlayLim)
 Dim pY#(optPlayLim)
 Dim pZ#(optPlayLim)

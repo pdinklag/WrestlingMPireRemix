@@ -1511,6 +1511,7 @@ Function ManageEntrance(cyc)
   ;activate player (and team-mates)
   If pOutTim(cyc)=0
    pOutTim(cyc)=1 : pHidden(cyc)=0
+   pEntranceTim(cyc)=0
    pAgenda(cyc)=0 : pOldAgenda(cyc)=-1
    pFoc(cyc)=0
    If matchState=1 
@@ -1618,6 +1619,11 @@ Function ManageEntrance(cyc)
   EndIf
   If pOutTim(cyc)>100 Or (pRole(cyc)=3 And pOutTim(cyc)>2) Then clocker=1
   If matchLocation>0 Then clocker=1
+  ;limit entrance immunity in elimination matches
+  If matchType=5
+   pEntranceTim(cyc)=pEntranceTim(cyc)+1
+   If pEntranceTim(cyc)>=1000 Then clocker=1
+  EndIf
   If clocker=1 Then pOutTim(cyc)=pOutTim(cyc)+1
   If matchState=1 And matchCage>0 And pPlatform(cyc)=>91 And pPlatform(cyc)=<94 Then pOutTim(cyc)=pOutTim(cyc)+1 ;cage booster
   If matchState=3 And pRole(cyc)=0 And pEliminated(cyc)=0 And InsideRing(pX#(cyc),pZ#(cyc),0) Then pOutTim(cyc)=pOutTim(cyc)+1 ;rumble booster 
