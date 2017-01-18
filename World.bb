@@ -1964,8 +1964,11 @@ End Function
 ;INCLUDE PLAYER IN CAMERA ACTIVITY?
 Function CamViable(cyc)
  viable=0
- If pOutTim(cyc)>0 And pHidden(cyc)=0
-  If LegalMan(cyc) Or (pRole(cyc)=0 And pChaosTim(cyc)>0 And pEliminated(cyc)=0) Or pControl(cyc)>0 
+
+ If pControl(cyc)>0
+  viable=1 ;non-AI players are always camera viable!
+ Else If pOutTim(cyc)>0 And pHidden(cyc)=0
+  If LegalMan(cyc) Or (pRole(cyc)=0 And pChaosTim(cyc)>0 And pEliminated(cyc)=0)
    humanBlock=0
    If matchPlayer>0 And LegalMan(matchPlayer)
     range#=50
