@@ -38,21 +38,21 @@ Include "Buckles.bb"
 Include "Teams.bb"
 Include "Promos.bb"
 
-;INITIATE ENGINE 
+;INITIATE ENGINE
 LoadOptions()
 
 ;PARSE COMMAND LINE
 cmd$=CommandLine()
 If Instr(cmd$, "-win")>0 Then optWindow=1
 
-optOnline=0;StartNetGame()
+optOnline=0;
 ChangeResolution(optMenuRes,0)
 SetBuffer BackBuffer()
 AutoMidHandle True
 EnableDirectInput True
 HidePointer
 MoveMouse rX#(650),rY#(500)
-SeedRnd(MilliSecs())   
+SeedRnd(MilliSecs())
 
 ;LOADING PROCESS
 ;prepare images
@@ -60,7 +60,7 @@ size=8
 For count=0 To 16
  font(count)=LoadFont("Comic Book Normal.ttf",size,0,0,0)
  size=size+2
-Next 
+Next
 gBackground=LoadImage("Graphics/Background.png")
 MaskImage gBackground,255,0,255
 ResizeImage gBackground,GraphicsWidth(),GraphicsHeight()
@@ -104,7 +104,7 @@ AddGimmick(0)
 ;online test
 screen=1
 If optOnline>0
- StartOnlineGame()
+ ;StartOnlineGame()
 EndIf
 
 ;SCREEN MANAGEMENT
@@ -118,7 +118,7 @@ Repeat
  ;get-out clause
  If KeyDown(56) And KeyDown(45) Then End
 Until screen=0
-End 
+End
 
 ;SCREEN ACCESS
 Function LoadScreen(request)
@@ -207,7 +207,7 @@ LoadPlayers()
 If matchEntrances=0
  matchState=0
  For cyc=1 To no_plays
-  GetNewFoc(cyc) 
+  GetNewFoc(cyc)
  Next
 EndIf
 ;activate dual control
@@ -232,13 +232,13 @@ EndIf
 ;load particles
 If optFX>0
  MatchLoader("Please Wait","Loading Effects")
- no_particles=1000 
+ no_particles=1000
  If optFX=1 Then no_particles=no_particles/2
  LoadParticles()
 EndIf
 ;load pools
 If optFX>0
- no_pools=50 
+ no_pools=50
  If optFX=<1 Then no_pools=no_pools/2
  LoadPools()
 EndIf
@@ -254,7 +254,7 @@ matchBlasted=0 : matchDamage=0 : matchWeapon=0
 matchIntruder=0 : matchBetrayal=0
 matchPause=0 : comTim=0 : comSpeed=0
 ;rule logic
-If matchLocation>0 
+If matchLocation>0
  If matchTeams>1 Then matchTeams=1
  If matchCountOuts>0 Then matchCountOuts=0
 EndIf
@@ -316,25 +316,25 @@ While go=0
  Cls
  frames=WaitTimer(timer)
  For framer=1 To frames
-	
+
   ;COUNTERS
   keytim=keytim-1
   If keytim<1 Then keytim=0
   controlTim=controlTim-1
-  If controlTim<0 Then controlTim=0 
+  If controlTim<0 Then controlTim=0
   For j=1 To 4
     If joyControlTim(j)>0 Then joyControlTim(j) = joyControlTim(j) - 1
   Next
   speedTim=speedTim-1
-  If speedTim<0 Then speedTim=0 
+  If speedTim<0 Then speedTim=0
   ;store old match/cam states
   matchOldState=matchState
   If camTempFoc=0 Then camOldFoc=camFoc
-	
+
   ;PORTAL
   gotim=gotim+1
-  If gotim>40 And keytim=0 
-   If KeyDown(1) Or KeyDown(28) 
+  If gotim>40 And keytim=0
+   If KeyDown(1) Or KeyDown(28)
     ;skip intro
     If matchState=0
      ProduceSound(cam,sSwing,20000,0.5) : keytim=20
@@ -356,7 +356,7 @@ While go=0
        If camZ#<-390 Then camX#=0 : camY#=30 : camZ#=-390 : camOldX#=camX# : camOldY#=camY# : camOldZ#=camZ#
        PositionEntity light(1),Rnd(-100,100),100,Rnd(-100,100)
        PositionEntity lightPivot,Rnd(-100,100),20,Rnd(-100,100)
-       PointEntity light(1),lightPivot 
+       PointEntity light(1),lightPivot
        If comTim>25 Then comTim=25 : comSpeed=-1
        matchTim=0
       EndIf
@@ -364,12 +364,12 @@ While go=0
     EndIf
     ;skip promos
 	If matchState=2 And matchPromo>0
-	 If promoTim>25 And promoTim<promoLength(matchPromo)-25 
-	  promoTim=promoTim-100 : keytim=10 
+	 If promoTim>25 And promoTim<promoLength(matchPromo)-25
+	  promoTim=promoTim-100 : keytim=10
 	  If promoTim<25 Then promoTim=25
 	 EndIf
 	EndIf
-	;abort match 
+	;abort match
 	abortBlock=0
 	If game=1 And screenAgenda=12 Then abortBlock=1
     If KeyDown(1) And abortBlock=0 And matchState=3 And matchTim>50
@@ -378,12 +378,12 @@ While go=0
      matchWinner=0 : matchWinStyle=0
      If game=1 And gamSchedule(gamDate)=4 Then matchWinner=teamLegal(2)
      EndMatch(matchWinner)
-    EndIf 
+    EndIf
 	;exit
-    If matchState=4 And matchTim>50 Then go=-1  
-   EndIf     
+    If matchState=4 And matchTim>50 Then go=-1
+   EndIf
   EndIf
-  
+
   ;ppppppppppppppppppppppp PAUSE LOOP pppppppppppppppppppppppppppppppp
   ;pause toggle
   If (KeyDown(25) And gotim>20 And keytim=0) Or (KeyDown(1) And matchPause=1)
@@ -391,7 +391,7 @@ While go=0
    If matchPause=1 Then matchPause=0 Else matchPause=1
   EndIf
   ;pause loop
-  If matchPause=0  
+  If matchPause=0
 
    ;FIDDLES
    If gotim>40 And keytim=0
@@ -404,21 +404,21 @@ While go=0
     EndIf
     ;alter game speed
     For count=1 To 4
-     If KeyDown(58+count) 
+     If KeyDown(58+count)
       PlaySound sMenuSelect : keytim=10
       optSpeed=count : speedTim=100
       FreeTimer timer
-      timer=CreateTimer(frameRate(optSpeed)) 
+      timer=CreateTimer(frameRate(optSpeed))
       If optSpeed=1 Then PostMessage("Normal game speed restored...")
       If optSpeed=2 Then PostMessage("Swift game speed activated!")
       If optSpeed=3 Then PostMessage("Fast game speed activated!")
       If optSpeed=4 Then PostMessage("Turbo game speed activated!")
-     EndIf 
+     EndIf
     Next
     ;toggle health meters
     If KeyDown(63)
      PlaySound sMenuSelect : keytim=10
-     optMeters=optMeters+1 
+     optMeters=optMeters+1
      If optMeters>2 Then optMeters=0
      If optMeters=0 Then PostMessage("Health displays have been turned off...")
      If optMeters=1 Then PostMessage("Minimal health displays have been selected...")
@@ -427,22 +427,22 @@ While go=0
     ;toggle entertainment display
     If KeyDown(64)
      PlaySound sMenuSelect : keytim=10
-     entDisplay=entDisplay+1 
+     entDisplay=entDisplay+1
      If entDisplay>3 Then entDisplay=0
      If entDisplay=0 Then PostMessage("Entertainment display has been turned off...")
      If entDisplay>0 Then PostMessage("Entertainment display has been adjusted...")
     EndIf
     ;stop crowd animation
-    If KeyDown(65) 
+    If KeyDown(65)
      PlaySound sMenuSelect : keytim=10
      If optCrowdAnim=1 Then optCrowdAnim=0 Else optCrowdAnim=1
      If optCrowdAnim=0 Then PostMessage("Crowd animation has been stopped...")
      If optCrowdAnim=1 Then PostMessage("Crowd animation has been restored...")
-    EndIf 
+    EndIf
     ;random explosion
-    If KeyDown(18) And KeyDown(45) 
+    If KeyDown(18) And KeyDown(45)
      x=Rnd(-130,130) : z=Rnd(-130,130)
-     If InsideRing(x,z,-10) Then y=wStage#+5 Else y=wGround#+5 
+     If InsideRing(x,z,-10) Then y=wStage#+5 Else y=wGround#+5
      CreateExplosion(0,x,y,z,1)
      keytim=10
     EndIf
@@ -473,7 +473,7 @@ While go=0
     ;switch character (keyboard)
     If KeyDown(15) And screenAgenda<>12 And optOnline=0
      newbie=matchPlayer
-     Repeat 
+     Repeat
       newbie=newbie+1 : satisfied=1
       If newbie>no_plays
         If matchPlayer=0 Then newbie=0 Else newbie=1
@@ -482,7 +482,7 @@ While go=0
         If pOutTim(newbie)=0 Then satisfied=0
         If pControl(newbie)>0 Then satisfied=0
         If game=1 And charFed(pChar(newbie))<>charFed(gamChar) Then satisfied=0
-        If pHidden(newbie)>0 Or (pEliminated(newbie) And optHideElim>0) Then satisfied=0 
+        If pHidden(newbie)>0 Or (pEliminated(newbie) And optHideElim>0) Then satisfied=0
       EndIf
      Until satisfied=1 Or newbie=matchPlayer
      If newbie<>matchPlayer
@@ -506,7 +506,7 @@ While go=0
               If pOutTim(newbie)=0 Then satisfied=0
               If pControl(newbie)>0 Then satisfied=0
               If game=1 And charFed(pChar(newbie))<>charFed(gamChar) Then satisfied=0
-              If pHidden(newbie)>0 Or (pEliminated(newbie) And optHideElim>0) Then satisfied=0 
+              If pHidden(newbie)>0 Or (pEliminated(newbie) And optHideElim>0) Then satisfied=0
             EndIf
           Until satisfied=1 Or newbie=joyPlayer(j)
 
@@ -517,7 +517,7 @@ While go=0
             pControl(newbie)=2
             pJoystick(newbie)=j-1
             pControl(old)=0
-            
+
             keytim=10
             joyControlTim(j)=100
             PlaySound sSwing
@@ -542,33 +542,33 @@ While go=0
     If matchReward=2 Then namer$="World Championship on the line!"
     If matchReward=3 Then namer$="Inter Championship on the line!"
     If matchReward=4 Then namer$="Tag Championships on the line!"
-    If matchTeams=<0 
-     If matchReward=5 Then namer$="Trophy to be awarded!" 
-     If matchReward=6 Then namer$="Loser gets their head shaved!" 
-     If matchReward=7 Then namer$="Loser must leave the company!" 
+    If matchTeams=<0
+     If matchReward=5 Then namer$="Trophy to be awarded!"
+     If matchReward=6 Then namer$="Loser gets their head shaved!"
+     If matchReward=7 Then namer$="Loser must leave the company!"
     Else
-     If matchReward=5 Then namer$="Trophies to be awarded!" 
-     If matchReward=6 Then namer$="Losers get their heads shaved!" 
-     If matchReward=7 Then namer$="Losers must leave the company!" 
+     If matchReward=5 Then namer$="Trophies to be awarded!"
+     If matchReward=6 Then namer$="Losers get their heads shaved!"
+     If matchReward=7 Then namer$="Losers must leave the company!"
     EndIf
-    If screenAgenda=11 
+    If screenAgenda=11
      If CupStage(cupFoc(cupSlot))=5 Then namer$="Tournament 1st Round!"
      If CupStage(cupFoc(cupSlot))=4
-      If cupSize(cupSlot)=<16 Then namer$="Tournament 1st Round!" Else namer$="Tournament 2nd Round!"  
+      If cupSize(cupSlot)=<16 Then namer$="Tournament 1st Round!" Else namer$="Tournament 2nd Round!"
      EndIf
-     If CupStage(cupFoc(cupSlot))=3 Then namer$="Tournament Quarter-Finals!" 
-     If CupStage(cupFoc(cupSlot))=2 Then namer$="Tournament Semi-Finals!" 
-     If CupStage(cupFoc(cupSlot))=1 Then namer$="Tournament Final!" 
+     If CupStage(cupFoc(cupSlot))=3 Then namer$="Tournament Quarter-Finals!"
+     If CupStage(cupFoc(cupSlot))=2 Then namer$="Tournament Semi-Finals!"
+     If CupStage(cupFoc(cupSlot))=1 Then namer$="Tournament Final!"
     EndIf
     PostMessage(namer$)
-   EndIf 
+   EndIf
    If matchState=0 And matchTim>125 And comTim>25 Then comTim=25 : comSpeed=-1
    ;trigger entrances
    startTim=185
    If matchLocation>0 Then startTim=startTim/2
    If matchState=0 And matchTim>startTim
     matchState=1 : matchTim=0
-    If matchEnter=0 
+    If matchEnter=0
      If camType=12 And matchEntrances=0 Then camA#=CleanAngle#(camA#+180) : camPivAccel=0
      GetCamera(optDefaultCam)
     EndIf
@@ -576,14 +576,14 @@ While go=0
    ;trigger promo
    If matchState=1 And matchEnter=0 And matchTim>50 Then matchState=2 : matchTim=0
    If matchState=2 Then promoTim=promoTim-1
-   If promoTim<0 Then promoTim=0 
+   If promoTim<0 Then promoTim=0
    If matchState=2 And promoTim=0 Then GetCamera(optDefaultCam) : arenaLight=1
    ;risk promo screw-up
    If game=1 And matchPromo>0 And speaker>0 And pSpeaking(speaker)>0 And promoTim>150 And ImportantPromo(matchPromo)=0
     randy=Rnd(0,charPopularity(pChar(speaker))*300)
     If randy=<1
      ProduceSound(p(speaker),sChoke,GetVoice(speaker),0) : entScore=entScore/2
-     matchPromo=-1 : promoTim=275 : promoMesser=speaker 
+     matchPromo=-1 : promoTim=275 : promoMesser=speaker
     EndIf
    EndIf
    ;start match
@@ -595,7 +595,7 @@ While go=0
      EndIf
     Next
     If matchLocation>0 Then startReady=1
-    If matchTim>1000 And matchCountOuts<3 Then startReady=1   
+    If matchTim>1000 And matchCountOuts<3 Then startReady=1
     If startReady=1
      PlaySound sBell : matchBellTim=10
      crowdVol#=1.0
@@ -620,7 +620,7 @@ While go=0
    If matchState=3
     matchClock=matchClock+1
     If matchClock=>30 Then matchSecs=matchSecs+1 : matchClock=0
-    If matchSecs=>60 
+    If matchSecs=>60
      matchMins=matchMins+1 : matchSecs=0
      If matchBlastTim>5 And matchMins=matchBlastTim-5 Then PostMessage("5 minutes until the blast!")
      If matchBlastTim>0 And matchMins=matchBlastTim-1 Then PostMessage("One minute until the blast!")
@@ -628,7 +628,7 @@ While go=0
 	 If matchTimeLim>1 And matchMins=matchTimeLim-1 Then PostMessage("One minute remaining!")
 	EndIf
     If matchMins=>60 Then matchMins=0 : matchSecs=0
-    If matchTimeLim>0 And matchMins=>matchTimeLim Then matchMins=matchTimeLim : matchSecs=0 
+    If matchTimeLim>0 And matchMins=>matchTimeLim Then matchMins=matchTimeLim : matchSecs=0
    EndIf
    ;rumble participants
    If matchState=3 And matchTeams=-1
@@ -637,10 +637,10 @@ While go=0
      If pOutTim(v)=0 Then remaining=remaining+1
     Next
     If remaining=0 Then matchMins=matchTimeLim : matchSecs=0 : matchClock=0
-    If remaining>0 And matchMins=>matchTimeLim 
+    If remaining>0 And matchMins=>matchTimeLim
 	 matchMins=0 : matchSecs=0 : matchClock=0
 	 matchEnter=0
-	 Repeat  
+	 Repeat
       matchEnter=matchEnter+1
       If matchEnter>no_wrestlers Then matchEnter=0
      Until pOutTim(matchEnter)=0 Or matchEnter=0
@@ -650,10 +650,10 @@ While go=0
 	  If ChannelPlaying(chTheme) And matchState<>4 Then StopChannel chTheme : arenaLight=1
 	  If game=0
 	   For v=1 To no_wrestlers
-	    If pControl(matchEnter)=0 And pControl(v)>0 And pEliminated(v) 
+	    If pControl(matchEnter)=0 And pControl(v)>0 And pEliminated(v)
 	     pControl(matchEnter)=pControl(v) : pControl(v)=0
 	     pJoystick(matchEnter)=pJoystick(v) : pJoystick(v)=0
-	
+
 	     If v=matchPlayer Then matchPlayer=matchEnter
 	     For j=1 To 4
 		  If v=joyPlayer(j) Then joyPlayer(j)=matchEnter
@@ -664,7 +664,7 @@ While go=0
 	  EndIf
      EndIf
     EndIf
-   EndIf 
+   EndIf
    ;keep score
    If matchState=3 Then KeepScore()
    MonitorEntertainment()
@@ -684,7 +684,7 @@ While go=0
    If matchState=4 Then expireTim=400 Else expireTim=100
    If matchState<>1 And comTim>expireTim And comSpeed>0 Then comSpeed=-comSpeed
    If comTim<0 Then comTim=0
- 
+
    ;PLAYER CYCLE
    ;store old positions
    PreCycleChecks()
@@ -709,7 +709,7 @@ While go=0
    ;weapons
    WeaponCycle()
 
-   ;PARTICLE EFFECTS  
+   ;PARTICLE EFFECTS
    If optFX>0
     ;particles
     ParticleCycle()
@@ -732,9 +732,9 @@ While go=0
 	  If randy=<6 Then videoScreen(count)=randy
 	  If randy=>7 And randy=<12 Then videoScreen(count)=Rnd(10,12)
 	  If randy=13 And no_wrestlers=<10 And videoOldScreen(count)<20
-	   videoScreen(count)=20+Rnd(1,no_wrestlers) 
+	   videoScreen(count)=20+Rnd(1,no_wrestlers)
 	   If matchEnter>0 Then videoScreen(count)=20+matchEnter
-	   If matchWinner>0 Then videoScreen(count)=20+matchWinner 
+	   If matchWinner>0 Then videoScreen(count)=20+matchWinner
 	  EndIf
 	  If randy=>13 And randy=<18 And arenaApron=>16 And arenaApron=<18 Then videoScreen(count)=20
 	  If videoScreen(count)<0 Then videoScreen(count)=0
@@ -762,7 +762,7 @@ While go=0
   EndIf
 
   ;CAMERA
-  Camera() 
+  Camera()
 
  ;UPDATE WORLD
  If matchPause=0 Then UpdateWorld
@@ -773,7 +773,7 @@ While go=0
   For cyc=1 To no_plays
    ;body swaying
    limb=FindChild(p(cyc),"Body")
-   RotateEntity limb,EntityPitch(limb)+pBodyXA#(cyc),EntityYaw(limb),EntityRoll(limb)+pBodyZA#(cyc) 
+   RotateEntity limb,EntityPitch(limb)+pBodyXA#(cyc),EntityYaw(limb),EntityRoll(limb)+pBodyZA#(cyc)
    ;pointed head/eyes
    If HeadViable(cyc) And pFoc(cyc)>0
     PositionEntity dummy,pLookX#(cyc),pLookY#(cyc),pLookZ#(cyc)
@@ -785,7 +785,7 @@ While go=0
     RotateEntity pLimb(cyc,45),0,0,0
     RotateEntity pLimb(cyc,46),0,0,0
    EndIf
-   If pDizzyTim(cyc)>0 Or charEyeShape(pChar(cyc))=112 Then LookAtPerson(cyc,cyc) 
+   If pDizzyTim(cyc)>0 Or charEyeShape(pChar(cyc))=112 Then LookAtPerson(cyc,cyc)
   Next
  EndIf
 
@@ -802,7 +802,7 @@ While go=0
   EndIf
   If randy=1 Then CopyRect rX#(400)-256,rY#(275)-128,512,256,0,0,0,TextureBuffer(tVideo(12)) ;sporadic feed 2
  EndIf
-  
+
  ;POST-RENDER DETAILS
  For cyc=1 To no_plays
   ;clock true positions
@@ -826,7 +826,7 @@ While go=0
   showMins=matchMins : showSecs=matchSecs
   If matchTimeLim>0
    showMins=matchTimeLim-matchMins
-   If matchSecs>0 Then showMins=showMins-1 
+   If matchSecs>0 Then showMins=showMins-1
    showSecs=60-matchSecs
    If matchSecs=0 Then showSecs=0
   EndIf
@@ -841,7 +841,7 @@ While go=0
  ;meters
  If matchState=3 And optMeters>0
   DisplayMeters()
- EndIf 
+ EndIf
  ;camera
  If camTim>0
   x=rX#(762) : y=rY#(568)
@@ -870,9 +870,9 @@ While go=0
   ;y=180
   ;For cyc=1 To no_plays
    ;Outline("P"+cyc+": "+pController(cyc),100,y,0,0,0,200,200,200)
-   ;y=y+15 
-  ;Next 
-  ;Outline("Chat>: "+netChat$,100,y,0,0,0,255,255,255) 
+   ;y=y+15
+  ;Next
+  ;Outline("Chat>: "+netChat$,100,y,0,0,0,255,255,255)
  ;EndIf
  ;mask shaky start
  If gotim=<0 Then MatchLoader("Please Wait","Preparing To Play")
@@ -898,7 +898,7 @@ FreeEntity camPivot
 FreeEntity dummy
 ;remove lights
 For cyc=1 To no_lights
- Loader("Please Wait","Removing Lights") 
+ Loader("Please Wait","Removing Lights")
  FreeEntity light(cyc)
 Next
 FreeEntity lightPivot
@@ -926,14 +926,14 @@ If no_signs>0
 EndIf
 ;remove players
 For cyc=1 To no_plays
- Loader("Please Wait","Removing "+charName$(pChar(cyc))) 
+ Loader("Please Wait","Removing "+charName$(pChar(cyc)))
  FreeEntity p(cyc)
  If optLabels>0 Then FreeEntity pLabel(cyc)
- FreeTexture pEyeTex(cyc) 
+ FreeTexture pEyeTex(cyc)
  For limb=1 To 50
   If pShadow(cyc,limb)>0
    FreeEntity pShadow(cyc,limb)
-  EndIf 
+  EndIf
  Next
  If no_wrestlers=<10 And pRole(cyc)=0 Then FreeTexture tVideo(20+cyc)
 Next
@@ -959,9 +959,9 @@ If optFX>0
 EndIf
 ;remove pools
 If optGore=>2
- Loader("Please Wait","Removing Effects")  
+ Loader("Please Wait","Removing Effects")
  For cyc=1 To no_pools
-  FreeEntity pool(cyc)  
+  FreeEntity pool(cyc)
  Next
 EndIf
 ;process photo
@@ -979,7 +979,7 @@ ChangeResolution(optMenuRes,1)
 If screenAgenda=11 And game=0
  cupResult(cupSlot,cupFoc(cupSlot))=pTeam(matchWinner)
  If cupFoc(cupSlot)>1 And cupResult(cupSlot,cupFoc(cupSlot))>0
-  cupBracket(cupSlot,cupTargetBracket(cupFoc(cupSlot)),cupTargetSlot(cupFoc(cupSlot)))=cupBracket(cupSlot,cupFoc(cupSlot),cupResult(cupSlot,cupFoc(cupSlot))) 
+  cupBracket(cupSlot,cupTargetBracket(cupFoc(cupSlot)),cupTargetSlot(cupFoc(cupSlot)))=cupBracket(cupSlot,cupFoc(cupSlot),cupResult(cupSlot,cupFoc(cupSlot)))
   cupFoc(cupSlot)=0
  EndIf
  For cyc=1 To no_plays
@@ -989,7 +989,7 @@ If screenAgenda=11 And game=0
    If pInjured(cyc,count)>0
     cupCharInjured(cupSlot,char,count)=pInjured(cyc,count)*2
     cupCharHealth(cupSlot,char)=0
-   EndIf 
+   EndIf
   Next
  Next
 EndIf
@@ -997,8 +997,8 @@ EndIf
 If game=1 And screenAgenda<>10 And screenAgenda<>12
  gamSegments(gamDate)=gamSegments(gamDate)+1
  gamMatchScore(gamDate,gamSegments(gamDate))=entTotal
- gamMatchHardcore(gamDate,gamSegments(gamDate))=entHardTotal 
- gamMatchFormat(gamDate,gamSegments(gamDate))=1 
+ gamMatchHardcore(gamDate,gamSegments(gamDate))=entHardTotal
+ gamMatchFormat(gamDate,gamSegments(gamDate))=1
  If matchTeams>0 And no_wrestlers=>4 Then gamMatchFormat(gamDate,gamSegments(gamDate))=2
  If matchTeams=<0 And no_wrestlers=>4 Then gamMatchFormat(gamDate,gamSegments(gamDate))=3
  If matchWinner>0 Then gamMatchWinner(gamDate,gamSegments(gamDate))=pChar(matchWinner)
@@ -1038,12 +1038,12 @@ Function ManageCrowd()
  If arenaType=>2 Then attendance#=25+PercentOf#(75,arenaAttendance)
  If arenaCrowd=0 Then attendance#=0
  ChannelVolume chCrowd,PercentOf#(crowdVol#,attendance#)
- If camZ#>400 Or camZ#<-400 Then ChannelVolume chCrowd,PercentOf#(crowdVol#,attendance#)/2 
+ If camZ#>400 Or camZ#<-400 Then ChannelVolume chCrowd,PercentOf#(crowdVol#,attendance#)/2
  ;fluctuate pitch
  ;randy=Rnd(0,1000)
  ;If randy=0 Then crowdPitchTarget#=Rnd(35000,48000)
  ;If randy=1 Then crowdPitchTarget#=44100
- crowdPitchTarget#=37000+(10000*entSatisfy#) 
+ crowdPitchTarget#=37000+(10000*entSatisfy#)
  If crowdPitch#>crowdPitchTarget# Then crowdPitch#=crowdPitch#-5
  If crowdPitch#<crowdPitchTarget# Then crowdPitch#=crowdPitch#+5
  ChannelPitch chCrowd,crowdPitch#
@@ -1091,19 +1091,19 @@ Function Pop(cyc,sound,vol#)
  ;bind response to allegiance
  If cyc>0
   If sound=2 Or sound=3 Then sound=2+pHeel(cyc)
-  If sound=4 Or sound=5 Then sound=4+pHeel(cyc) 
+  If sound=4 Or sound=5 Then sound=4+pHeel(cyc)
   If sound=6 Or sound=7 Then sound=6+pHeel(cyc)
  EndIf
  ;determine volume
- If vol#=0 Then vol#=Rnd(0.5,1.1) 
+ If vol#=0 Then vol#=Rnd(0.5,1.1)
  If cyc>0 Then vol#=PercentOf#(vol#,pPopularity(cyc))
  If vol#>crowdVol# Then vol#=crowdVol#
  If arenaType=1 Then attendance#=20+PercentOf#(40,arenaAttendance)
  If arenaType=>2 Then attendance#=25+PercentOf#(75,arenaAttendance)
- If arenaCrowd=0 Then attendance#=0 
+ If arenaCrowd=0 Then attendance#=0
  vol#=PercentOf#(vol#,attendance#)
  If screen=50 And (camZ#>400 Or camZ#<-400) Then vol#=vol#/2
- If game=1 And matchState=2 And promoLogic=0 Then vol#=vol#/4 
+ If game=1 And matchState=2 And promoLogic=0 Then vol#=vol#/4
  ;deliver sound
  If sound>1 And arenaCrowd>0
   SoundVolume sCrowd(sound),vol#
@@ -1128,17 +1128,17 @@ Function MonitorEntertainment()
  entWorkers=no_wrestlers
  If matchTeams=2 Then entWorkers=3
  If matchCountOuts=3 And matchCage=0 Then entWorkers=PercentOf#(no_wrestlers,90)
- If matchTeams=-1 Then entWorkers=no_wrestlers/2 
+ If matchTeams=-1 Then entWorkers=no_wrestlers/2
  If entWorkers<2 Then entWorkers=2
  ;potential
- entPotential=0 : divider=0 
- For cyc=1 To no_wrestlers 
-  If LegalMan(cyc) And pOutTim(cyc)>0 And pEliminated(cyc)=0 
+ entPotential=0 : divider=0
+ For cyc=1 To no_wrestlers
+  If LegalMan(cyc) And pOutTim(cyc)>0 And pEliminated(cyc)=0
    entPotential=entPotential+(PercentOf#(charPopularity(pChar(cyc)),50)+60)
    divider=divider+1
   EndIf
  Next
- entPotential=entPotential+entFeud  
+ entPotential=entPotential+entFeud
  If matchReward=2 Or matchReward=7 Or fed=0 Or (screenAgenda=11 And cupFoc(cupSlot)=1) Then entPotential=entPotential+(entPotential/10)
  If matchReward=3 Or matchReward=4 Or matchReward=6 Or (screenAgenda=11 And cupFoc(cupSlot)>1) Then entPotential=entPotential+(entPotential/15)
  If divider<1 Then divider=1
@@ -1150,19 +1150,19 @@ Function MonitorEntertainment()
  If entChemistry=0 Then entBored=entBored+1
  If entClose=0 Then entBored=entBored+1
  If GetMatchRating(entTotal)=>5 Then entBored=entBored+1
- If GetMatchContent(entHardTotal)=>3 Then entBored=entBored+1 
+ If GetMatchContent(entHardTotal)=>3 Then entBored=entBored+1
  If matchTeams=2 And matchState=3 And teamRemaining(1)+teamRemaining(2)=>4
   If FindChaos() Then entBored=entBored+(((teamRemaining(1)+teamRemaining(2))/2)-1)
   If InsideRing(pX#(teamLegal(1)),pZ#(teamLegal(1)),0)=0 Or InsideRing(pX#(teamLegal(2)),pZ#(teamLegal(2)),0)=0
    entBored=entBored+(((teamRemaining(1)+teamRemaining(2))/2)-1)
   EndIf
  EndIf
- If matchMins<>matchTimeLim-1 
+ If matchMins<>matchTimeLim-1
   boreTim=optLength+1
   If matchTeams=-1 Or matchTeams=2 Then boreTim=optLength+(no_wrestlers/2)
   If matchMins=>boreTim Then entBored=entBored+1
   If matchMins=>boreTim*2 Then entBored=entBored+1
-  If matchMins=>boreTim*3 Then entBored=entBored+1 
+  If matchMins=>boreTim*3 Then entBored=entBored+1
   If matchMins=>boreTim*4 Then entBored=entBored+1
  EndIf
  If entBored>10 Then entBored=10
@@ -1211,7 +1211,7 @@ Function FindClose()
  ;health gaps
  entClose=1
  If matchTeams=1
-  teamHealth(1)=0 : teamHealth(2)=0 
+  teamHealth(1)=0 : teamHealth(2)=0
   For cyc=1 To no_wrestlers
    If pOutTim(cyc)>0 And LegalMan(cyc) And pEliminated(cyc)=0 Then teamHealth(pTeam(cyc))=teamHealth(pTeam(cyc))+pHealth(cyc)
   Next
@@ -1225,19 +1225,19 @@ Function FindClose()
   For cyc=1 To no_wrestlers
    If pOutTim(cyc)>0 And LegalMan(cyc) And pEliminated(cyc)=0
     If GetPercent#(pHealth(cyc),5000*optLength)<GetPercent#(healthAverage,5000*optLength)-15 Then entClose=0
-    If GetPercent#(pHealth(cyc),5000*optLength)>GetPercent#(healthAverage,5000*optLength)+15 Then entClose=0 
+    If GetPercent#(pHealth(cyc),5000*optLength)>GetPercent#(healthAverage,5000*optLength)+15 Then entClose=0
    EndIf
   Next
  EndIf
  ;accumilative scores
- If matchType=2 Or matchType=3 
+ If matchType=2 Or matchType=3
   If matchTeams=<0 And matchLeader>0 Then entClose=0
-  If matchTeams>0 And teamFalls(1)<>teamFalls(2) Then entClose=0 
+  If matchTeams>0 And teamFalls(1)<>teamFalls(2) Then entClose=0
  EndIf
  ;team numbers
  If matchTeams=1 And teamRemaining(1)<>teamRemaining(2) Then entClose=0
  ;rumbles are always close!
- If matchCountOuts=3 And matchCage=0 Then entClose=1 
+ If matchCountOuts=3 And matchCage=0 Then entClose=1
 End Function
 
 ;FIND FACE-HEEL CHEMISTRY
@@ -1261,14 +1261,14 @@ End Function
 Function FindFeud()
  ;find heated contact
  feuderA=0 : feuderB=0
- For cyc=1 To no_plays 
+ For cyc=1 To no_plays
   If pRole(cyc)<>2 Or pChaosTim(cyc)>0
    For v=1 To no_plays
     If pRole(v)<>2 Or pChaosTim(v)>0
      If cyc<>v And pTeam(cyc)<>pTeam(v) And charRelationship(pChar(cyc),pChar(v))<0 And charRelationship(pChar(cyc),pChar(v))=>-4
       If matchState=0 And pRole(cyc)=<1 And pRole(v)=<1 Then feuderA=cyc : feuderB=v
       If (pFoc(cyc)=v And pFoc(v)=cyc) Or pGrappling(cyc)=v Or pGrappler(cyc)=v Or pPinning(cyc)=v Or pPinner(cyc)=v
-       If pOutTim(cyc)>0 And pOutTim(v)>0 Then feuderA=cyc : feuderB=v  
+       If pOutTim(cyc)>0 And pOutTim(v)>0 Then feuderA=cyc : feuderB=v
       EndIf
      EndIf
     EndIf
@@ -1286,7 +1286,7 @@ End Function
 ;VIABLE TO SCORE ENTERTAINMENT POINTS?
 Function EntertainViable(cyc,v)
  viable=0
- If cyc>0 
+ If cyc>0
   If LegalMan(cyc) Or pRole(cyc)=1 Or pRole(cyc)=3 Or InsideRing(RealX#(cyc),RealZ#(cyc),-5) Then viable=1
  EndIf
  If v>0
@@ -1327,7 +1327,7 @@ Function DisplayRatings()
  x=entX : y=entY
  ;display rating graphics
  If camTim=0
-  If (entDisplay=>1 And matchState=3) Or matchState=4 
+  If (entDisplay=>1 And matchState=3) Or matchState=4
    DrawImage gRating(GetMatchRating(entTotal)),rX#(x),rY#(y)
   EndIf
   If (entDisplay=>2 And matchState=3) Or matchState=4
@@ -1355,7 +1355,7 @@ Function DisplayRatings()
   SetFont fontStat(1)
   percenter=Int(GetPercent#(entPotential-50,75))
   If percenter>99 Then percenter=99
-  OutlineStraight(percenter+"%",rX#(x)+29,rY#(y)-39,0,0,0,250,240,200) 
+  OutlineStraight(percenter+"%",rX#(x)+29,rY#(y)-39,0,0,0,250,240,200)
  EndIf
  ;diagnostics
  ;SetFont fontStat(1)
@@ -1376,7 +1376,7 @@ Function DeclareFall(cyc,v)
  CauseChaos(100)
  ;assess consquences
  action=0
- If cyc>0 And matchType=>1 And matchType=<4 Then action=1 
+ If cyc>0 And matchType=>1 And matchType=<4 Then action=1
  If cyc=0 And matchType=>2 And matchType=<4
   action=2
   If matchTeams=<0 And matchRemaining>2 Then action=0
@@ -1387,7 +1387,7 @@ Function DeclareFall(cyc,v)
   Pop(0,3-pHeel(v),1)
   entScore=entScore+(charPopularity(pChar(v))*2)
   If matchWinStyle=>3 And matchWinStyle=<5 Then entScore=entScore+(charPopularity(pChar(v))*2)
-  If (RefViable(v)=13 Or RefViable(v)=14) And AttackViable(v)=>2 Then pDT(v)=pDT(v)+500 : pDizzyTim(v)=Rnd(pDT(v),pDT(v)*2) 
+  If (RefViable(v)=13 Or RefViable(v)=14) And AttackViable(v)=>2 Then pDT(v)=pDT(v)+500 : pDizzyTim(v)=Rnd(pDT(v),pDT(v)*2)
   pEliminated(v)=1 : pOutTim(v)=1000
   GetNewLegal(v)
   If matchType=4 And matchLeader=v Then matchLeader=0
@@ -1416,7 +1416,7 @@ Function DeclareFall(cyc,v)
  EndIf
  ;punish victim
  If action=2
-  Pop(0,3-pHeel(v),1) 
+  Pop(0,3-pHeel(v),1)
   entScore=entScore+(charPopularity(pChar(v))*2)
   If pFalls(v)>0
    pFalls(v)=pFalls(v)-1
@@ -1523,7 +1523,7 @@ Function EndMatch(cyc)
   If matchBellTim=0 Then PlaySound sBell : matchBellTim=10
   matchWinner=cyc : matchState=4 : matchTim=0
   ;force a cup winner
-  If matchWinner=0 And screenAgenda=11 
+  If matchWinner=0 And screenAgenda=11
    If matchTeams>0
     If pHealth(1)+pHealth(2)=>pHealth(3)+pHealth(4) Then matchWinner=1 Else matchWinner=3
    Else
@@ -1538,7 +1538,7 @@ Function EndMatch(cyc)
    Until pTeam(matchLoser)<>pTeam(matchWinner)
   EndIf
   ;switch focus to winner
-  If matchWinner>0 
+  If matchWinner>0
    camFoc=matchWinner : camType=12 : camA#=CleanAngle#(pA#(camFoc))
    camTempTim=0 : camTempFoc=0
   EndIf
@@ -1549,7 +1549,7 @@ Function EndMatch(cyc)
   If matchWinner>0 And screenAgenda<>12 And (fed<>7 Or arenaPreset=>11)
    If game=0 Or fed=0 Or fedProduction(charFed(gamChar),6)>0 Then PlayTheme(pChar(matchWinner))
   EndIf
-  If matchWinner>0 
+  If matchWinner>0
    entScore=entScore+(charPopularity(pChar(matchWinner))/2)
    If matchReward=>2 Or screenAgenda=11 Then entScore=entScore+(charPopularity(pChar(matchWinner))/2)
    If matchReward=2 Or matchReward=7 Or (screenAgenda=11 And cupFoc(cupSlot)=1) Then entScore=entScore+(charPopularity(pChar(matchWinner))/2)
@@ -1567,7 +1567,7 @@ Function EndMatch(cyc)
    EndIf
    If pRole(v)=1 And matchWinner=0 Then pReaction(v)=172
    ;lose hair
-   If matchReward=6 And matchWinner>0 And pTeam(v)<>pTeam(matchWinner) And pRole(v)=0 
+   If matchReward=6 And matchWinner>0 And pTeam(v)<>pTeam(matchWinner) And pRole(v)=0
     Pop(0,7,1) : Pop(0,8,1)
     For coz=1 To 3
      If charHairStyle(pChar(v),coz)=5 Or charHairStyle(pChar(v),coz)=6 Or charHairStyle(pChar(v),coz)=22 Or charHairStyle(pChar(v),coz)=34 Then charHairStyle(pChar(v),coz)=1
@@ -1586,15 +1586,15 @@ Function EndMatch(cyc)
   If fed>0 And matchWinner>0 And matchWinStyle=>1 And matchWinStyle=<5
    If matchReward=2 Then fedChampWorld(fed)=pChar(matchWinner) : WriteHistory(fed,1)
    If matchReward=3 Then fedChampInter(fed)=pChar(matchWinner) : WriteHistory(fed,2)
-   If matchReward=4 
+   If matchReward=4
     fedChampTag(fed,1)=pChar(matchWinner)
     fedChampTag(fed,2)=pChar(matchWinner)
-    For v=1 To no_wrestlers  
+    For v=1 To no_wrestlers
      If cyc<>v And pTeam(v)=pTeam(matchWinner) Then fedChampTag(fed,2)=pChar(v)
     Next
-    If fedChampTag(fed,1)<>fedChampTag(fed,2) 
+    If fedChampTag(fed,1)<>fedChampTag(fed,2)
      charPartner(fedChampTag(fed,1))=fedChampTag(fed,2)
-     charPartner(fedChampTag(fed,2))=fedChampTag(fed,1) 
+     charPartner(fedChampTag(fed,2))=fedChampTag(fed,1)
     EndIf
    EndIf
    WriteHistory(fed,3)
@@ -1606,15 +1606,15 @@ Function EndMatch(cyc)
   ;describe ending
   If matchWinner=0 Then PostMessage("Nobody won this contest...")
   If matchWinner>0
-   If matchTeams>0 
+   If matchTeams>0
     If no_wrestlers=3 And matchWinner=1
-     PostMessage(charName$(pChar(matchWinner))+" Wins!") 
+     PostMessage(charName$(pChar(matchWinner))+" Wins!")
     Else
      PostMessage(charTeamName$(pChar(matchWinner))+" Win!")
     EndIf
     If no_wrestlers=<4 And TitleHolder(pChar(matchWinner),3) Then comSuffix$="Tag Champions"
    Else
-    PostMessage(charName$(pChar(matchWinner))+" Wins!") 
+    PostMessage(charName$(pChar(matchWinner))+" Wins!")
     If TitleHolder(pChar(matchWinner),3) Then comSuffix$="Tag Champion"
     If TitleHolder(pChar(matchWinner),2) Then comSuffix$="Inter Champion"
     If TitleHolder(pChar(matchWinner),1) Then comSuffix$="World Champion"
@@ -1624,7 +1624,7 @@ Function EndMatch(cyc)
     If TitleHolder(pChar(matchWinner),2) And pChar(matchWinner)<>fedOldChampInter(fed) Then comSuffix$="New Inter Champion!"
     If TitleHolder(pChar(matchWinner),1) And pChar(matchWinner)<>fedOldChampWorld(fed) Then comSuffix$="New World Champion!"
    EndIf
-   If matchTeams>0 
+   If matchTeams>0
     If matchReward=5 Then comSuffix$="Trophy Winners!"
     If matchReward=6 Then comSuffix$=charTeamName$(pChar(matchLoser))+" Lose Hair!"
     If matchReward=7 Then comSuffix$=charTeamName$(pChar(matchLoser))+" Leave Town!"
@@ -1721,7 +1721,7 @@ Function DisplayMeters()
    If no_slots=2
     If cyc=1 Then x=250 : y=baseY
     If cyc=2 Then x=550 : y=baseY
-   EndIf 
+   EndIf
    If no_slots=3 Or no_slots=5
     If cyc=1 Then x=200 : y=baseY
     If cyc=2 Then x=400 : y=baseY
@@ -1801,7 +1801,7 @@ Function DrawMeter(cyc,x,y)
  meter=GetPercent#(pShowHealth(cyc),5000*optLength)
  r=0 : g=225 : b=0
  If FindInjury(cyc)>0 Then r=Rnd(130,220) : g=0 : b=0
- If LegalMan(cyc)=0 Then r=r-(r/fader) : g=g-(g/fader) : b=b-(b/fader) 
+ If LegalMan(cyc)=0 Then r=r-(r/fader) : g=g-(g/fader) : b=b-(b/fader)
  Color r,g,b : Rect x-50,y,meter,8,1
  r=0 : g=125 : b=0
  If FindInjury(cyc)>0 Then r=80 : g=0 : b=0
@@ -1827,7 +1827,7 @@ Function DrawMeter(cyc,x,y)
   If cyc=matchLeader Or pTeam(cyc)=pTeam(matchLeader) Then DrawImage gCrown,x,y-10
  EndIf
  If matchType=4 And cyc=matchLeader Then DrawImage gCrown,x,y-10
- ;name 
+ ;name
  r=255 : g=255 : b=255
  If controlTim>0 And cyc=matchPlayer Then r=200 : g=200 : b=255
  For j = 1 To 4
@@ -1835,8 +1835,8 @@ Function DrawMeter(cyc,x,y)
  Next
  If LegalMan(cyc)=0 Then r=r-(r/fader) : g=g-(g/fader) : b=b-(b/fader)
  namer$=charName$(pChar(cyc))
- If optOnline>0 And pController(cyc)>0 Then namer$=NetPlayerName$(pController(cyc))
- SqueezeFont(namer$,120,16) 
+ ;If optOnline>0 And pController(cyc)>0 Then namer$=NetPlayerName$(pController(cyc))
+ SqueezeFont(namer$,120,16)
  offset=2-fontNumber
  Outline(namer$,x,(y-3)+offset,0,0,0,r,g,b)
  ;stats
@@ -1856,74 +1856,22 @@ End Function
 
 ;START ONLINE GAME
 Function StartOnlineGame()
- If optOnline=0
-  optOnline=StartNetGame()
- EndIf
- ;enter name
- Cls
-	DrawImage gBackground,rX#(400),rY#(300)
-    DrawImage gLogo(1),rX#(400),rY#(250)
-    DrawImage gMDickie,rX#(400),rY#(530) 
- Flip 
- Repeat
-	SetFont font(7)
-	Color 255,255,255
-	Locate rX#(100),rY#(425)
-	netName$=Input$("Please enter a username: ")
- Until netName$<>""
- netID=CreateNetPlayer(netName$)
- netControl=0
- ;default match
- optEntrances=0
- optReferees=0 : optManagers=0 : optIntruders=0
- GetMatchRules(14)
- For cyc=1 To no_plays
-  pChar(cyc)=cyc
-  pControl(cyc)=3 : pController(cyc)=0
- Next
- If optOnline=2 Then netControl=1 : pController(netControl)=netID
- screen=50
+ optOnline=0
 End Function
 
 ;MANAGE NETWORK
 Function ManageNetwork()
- While RecvNetMsg()
-		Select NetMsgType()
-		
-		Case 1:
-		  If NetMsgFrom()<>netID
-		   For v=1 To no_plays
-			If pController(v)=NetMsgFrom() Then UnpackOnlineData(NetMsgData$(),v) : Exit
-		   Next
-		  EndIf
-		Case 10:
-			PostMessage(NetPlayerName$(NetMsgFrom())+": "+NetMsgData$())
-		Case 100:
-			For v=1 To no_plays
-			 If pController(v)=0 Then pController(v)=NetMsgFrom() : Exit
-		    Next
-			PostMessage(NetPlayerName$(NetMsgFrom())+" has joined the game.")
-		Case 101:
-			PostMessage(NetPlayerName$(NetMsgFrom())+" has left the game.")
-		Case 102:
-			PostMessage("New host!")
-		Case 200:
-			PostMessage("Connection lost!")
-			optOnline=0
-			
-		End Select
-	Wend
 End Function
 
 ;pack player details into a string.
 Function PackOnlineData$(cyc)
  stringer$=""
  For v=1 To no_plays
-  If optOnline=2 Then stringer$=stringer$+LSet$(pController(v),8) Else stringer$=stringer$+LSet$(0,8) 
+  If optOnline=2 Then stringer$=stringer$+LSet$(pController(v),8) Else stringer$=stringer$+LSet$(0,8)
  Next
  stringer$=stringer$+LSet$(cUp(cyc),8)+LSet$(cDown(cyc),8)+LSet$(cLeft(cyc),8)+LSet$(cRight(cyc),8)
  stringer$=stringer$+LSet$(cAttack(cyc),8)+LSet$(cRun(cyc),8)+LSet$(cBlock(cyc),8)
- stringer$=stringer$+LSet$(cGrapple(cyc),8)+LSet$(cPickUp(cyc),8)+LSet$(cSwitch(cyc),8)+LSet$(cTaunt(cyc),8)  
+ stringer$=stringer$+LSet$(cGrapple(cyc),8)+LSet$(cPickUp(cyc),8)+LSet$(cSwitch(cyc),8)+LSet$(cTaunt(cyc),8)
  Return stringer$
 End Function
 
@@ -1931,7 +1879,7 @@ End Function
 Function UnpackOnlineData(msg$,cyc)
  n=1
  For v=1 To no_plays
-  If optOnline=1 Then pController(v)=Mid$(msg$,n,8) 
+  If optOnline=1 Then pController(v)=Mid$(msg$,n,8)
   n=n+8
  Next
  cUp(cyc)=Mid$(msg$,n,8) : n=n+8

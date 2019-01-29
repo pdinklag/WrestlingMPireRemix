@@ -8,9 +8,9 @@
 Function GetInput(cyc)
  ;reset commands
  If optOnline=0 Then ResetInput(cyc)
- If gotim>0 And pOutTim(cyc)>0 And pHidden(cyc)=0 
+ If gotim>0 And pOutTim(cyc)>0 And pHidden(cyc)=0
   If pController(cyc)=netID Then netControl=cyc
-  If optOnline=0 Or (NetPlayerLocal(netID) And pController(cyc)=netID)
+  If optOnline=0 ;Or (NetPlayerLocal(netID) And pController(cyc)=netID)
    ;get keyboard input
    If pControl(cyc)=1 Or pControl(cyc)=3
     If KeyDown(200) Then cUp(cyc)=1
@@ -41,20 +41,20 @@ Function GetInput(cyc)
    EndIf
   EndIf
   ;chat input
-  If optOnline>0 And NetPlayerLocal(netID) And pController(cyc)=netID
-			k=GetKey()
-			If k>0
-				If k=13
-					If netChat$<>"" SendNetMsg 10,netChat$,netID,0,0
-					netChat$=""
-				Else If k=8
-					If Len(netChat$)>0 Then netChat$=Left$(netChat$,Len(netChat$)-1)
-				Else If k>=32 And k<127
-					netChat$=netChat$+Chr$(k)
-				EndIf
-			EndIf
-			If k<>13 Then SendNetMsg 1,PackOnlineData$(cyc),netID,0,0
-  EndIf
+  ;If optOnline>0 And NetPlayerLocal(netID) And pController(cyc)=netID
+  ;  k=GetKey()
+  ;  If k>0
+  ;      If k=13
+  ;          If netChat$<>"" SendNetMsg 10,netChat$,netID,0,0
+  ;          netChat$=""
+  ;      Else If k=8
+  ;          If Len(netChat$)>0 Then netChat$=Left$(netChat$,Len(netChat$)-1)
+  ;      Else If k>=32 And k<127
+  ;          netChat$=netChat$+Chr$(k)
+  ;      EndIf
+  ;  EndIf
+  ;  If k<>13 Then SendNetMsg 1,PackOnlineData$(cyc),netID,0,0
+  ;EndIf
   ;get CPU input
   If pControl(cyc)=0
    AI(cyc)
@@ -146,7 +146,7 @@ Function AI(cyc)
    If pRole(cyc)=2 And pFoc(cyc)=pClient(cyc) Then pAgenda(cyc)=1
   EndIf
   If pDizzyTim(cyc)>0 Or pBlindTim(cyc)>0 Then pAgenda(cyc)=0
- EndIf 
+ EndIf
  ;refereeing
  If pRole(cyc)=1 And pRelocate(cyc)=0
   oldDuty=0 : pOldFoc(cyc)=pFoc(cyc)
@@ -165,14 +165,14 @@ Function AI(cyc)
    Else
     If LegalMan(v) And (InProximity(cyc,v,30) Or ReachedCord(pTX#(cyc),pTZ#(cyc),pX#(v),pZ#(v),30))
      duties=0
-     For count=1 To no_plays  
+     For count=1 To no_plays
       If RefViable(count)>0 Then duties=duties+1
      Next
      If duties=0 Then pNowhere(cyc)=99
     EndIf
    EndIf
   Next
-  If pFoc(cyc)<>pOldFoc(cyc) 
+  If pFoc(cyc)<>pOldFoc(cyc)
    If (RefViable(pFoc(cyc))=>1 And RefViable(pFoc(cyc))=<4) Or (RefViable(pFoc(cyc))=>11 And RefViable(pFoc(cyc))=<14) Then pCountTim(cyc)=0
   EndIf
  EndIf
@@ -182,7 +182,7 @@ Function AI(cyc)
   For v=1 To no_wrestlers
    If LegalMan(v) And (InProximity(cyc,v,30) Or ReachedCord(pTX#(cyc),pTZ#(cyc),pX#(v),pZ#(v),30)) Then pNowhere(cyc)=99
   Next
- EndIf 
+ EndIf
  ;pin attraction
  If matchState=3 And matchPins>0 And LegalMan(cyc) And SwitchViable(cyc)
   For v=1 To no_wrestlers
@@ -205,7 +205,7 @@ Function AI(cyc)
   If pChaosTim(cyc)=0 And pPlatform(cyc)=<4 And (pAgenda(cyc)<11 Or pAgenda(cyc)>14) ;get out
    Repeat
     randy=Rnd(0,1)
-    If randy=0 Then pAgenda(cyc)=Rnd(12,13) Else pAgenda(cyc)=Rnd(11,14) 
+    If randy=0 Then pAgenda(cyc)=Rnd(12,13) Else pAgenda(cyc)=Rnd(11,14)
    Until FindTagConflict(cyc,pAgenda(cyc))=0
   EndIf
   randy=Rnd(0,100)
@@ -228,7 +228,7 @@ Function AI(cyc)
   Next
  EndIf
  ;pursue outside if caged
- If matchState=3 And matchCage>0 And matchCountOuts=3 And LegalMan(cyc) 
+ If matchState=3 And matchCage>0 And matchCountOuts=3 And LegalMan(cyc)
   If InsideRing(pX#(cyc),pZ#(cyc),0) And pPlatform(cyc)=<4
    If pFoc(cyc)>0 And AttackViable(pFoc(cyc))=>2
     randy=Rnd(0,500-pDT(pFoc(cyc)))
@@ -283,10 +283,10 @@ Function AI(cyc)
    threat=0
    If cyc<>v And pTeam(cyc)<>pTeam(v)
     If LegalMan(v)
-     If matchPins>0 And pPinning(v)>0 And pPinCount(pPinning(v))>0 And LegalMan(pPinning(v)) 
+     If matchPins>0 And pPinning(v)>0 And pPinCount(pPinning(v))>0 And LegalMan(pPinning(v))
       If pTeam(pPinning(v))=pTeam(cyc) Or matchType<>5 Then threat=1 ;pin threat
      EndIf
-     If matchSubs>0 And pGrappling(v)>0 And pStretched(pGrappling(v))>0 And LegalMan(pGrappling(v)) 
+     If matchSubs>0 And pGrappling(v)>0 And pStretched(pGrappling(v))>0 And LegalMan(pGrappling(v))
       If pTeam(pGrappling(v))=pTeam(cyc) Or matchType<>5 Then threat=1 ;submission threat
      EndIf
      If matchCage>0 And matchCountOuts=3 And pPlatform(v)=>91 And pPlatform(v)=<98
@@ -312,7 +312,7 @@ Function AI(cyc)
  EndIf
  ;rethink if getting nowhere
  pNowhere(cyc)=pNowhere(cyc)-1
- If pNowhere(cyc)<0 Then pNowhere(cyc)=0 
+ If pNowhere(cyc)<0 Then pNowhere(cyc)=0
  If pNowhere(cyc)>50 And pRelocate(cyc)=0
   If pPlatform(cyc)=>5
    its=0
@@ -351,19 +351,19 @@ Function AI(cyc)
   pAgenda(cyc)=0
   pNowhere(cyc)=0
   pRelocate(cyc)=50
- EndIf 
+ EndIf
  ;HONOUR AGENDA
  ;general exploration
  If pAgenda(cyc)=0
   randy=Rnd(0,250)
   If matchState<>3 Or (matchState=3 And pRole(cyc)>0) Then randy=Rnd(0,1000)
-  ;If matchState=3 And matchRules=0 And pRole(cyc)=2 Then randy=Rnd(0,5000) 
+  ;If matchState=3 And matchRules=0 And pRole(cyc)=2 Then randy=Rnd(0,5000)
   If matchState=2 Or TagStatic(cyc) Then randy=Rnd(0,10000)
   If randy=0 Or pAgenda(cyc)<>pOldAgenda(cyc)
    If matchState=3 And matchRules=0 And matchCountOuts=0
     sourceX#=pX#(cyc) : sourceZ#=pZ#(cyc)
-    If pRole(cyc)=1 
-     IdentifyCentres(0) 
+    If pRole(cyc)=1
+     IdentifyCentres(0)
      sourceX#=centreX# : sourceZ#=centreZ#
     EndIf
     If pRole(cyc)=2 Then sourceX#=pX#(pClient(cyc)) : sourceZ#=pZ#(pClient(cyc))
@@ -407,7 +407,7 @@ Function AI(cyc)
   EndIf
   If matchState=1 And pOutTim(cyc)=2 And (pZ#(cyc)>140 Or pZ#(cyc)<-140)
    If pTX#(cyc)<-17 Then pTX#(cyc)=-17
-   If pTX#(cyc)>17 Then pTX#(cyc)=17 
+   If pTX#(cyc)>17 Then pTX#(cyc)=17
    If (pZ#(cyc)>300 Or pZ#(cyc)<-300) Then pTX#(cyc)=0
   EndIf
   If randy=1 And (pDizzyTim(cyc)>0 Or pBlindTim(cyc)>0) Then pTX#(cyc)=pX#(cyc) : pTZ#(cyc)=pZ#(cyc)
@@ -428,11 +428,11 @@ Function AI(cyc)
  If pAgenda(cyc)=1 And v>0
   pTX#(cyc)=pX#(v) : pTZ#(cyc)=pZ#(v)
   pFollow(cyc)=15
-  If pRole(cyc)=1 
-   pFollow(cyc)=50 
+  If pRole(cyc)=1
+   pFollow(cyc)=50
    If RefViable(v)>0 Then pFollow(cyc)=20
   EndIf
-  If pRole(cyc)=2 And v=pClient(cyc) Then pFollow(cyc)=30 
+  If pRole(cyc)=2 And v=pClient(cyc) Then pFollow(cyc)=30
   If pAngerTim(cyc,v)>0 Then pFollow(cyc)=15
   If InsideRing(pX#(v),pZ#(v),-15) And InsideRing(pX#(cyc),pZ#(cyc),0)=0 Then pFollow(cyc)=1
   If pPlatform(v)=>91 And pPlatform(v)=<98 And pPlatform(cyc)=0 Then pFollow(cyc)=1
@@ -477,7 +477,7 @@ Function AI(cyc)
  EndIf
  ;follow item
  If pAgenda(cyc)=20 And no_items>0
-  If pItemFoc(cyc)=0 
+  If pItemFoc(cyc)=0
    Repeat
     pItemFoc(cyc)=Rnd(0,no_items)
    Until ItemProximity(cyc,pItemFoc(cyc),200) Or pItemFoc(cyc)=0
@@ -488,19 +488,19 @@ Function AI(cyc)
    pTX#(cyc)=iX#(pItemFoc(cyc)) : pTZ#(cyc)=iZ#(pItemFoc(cyc))
    pFollow(cyc)=5
    If pFoc(cyc)>0 And ItemProximity(cyc,pItemFoc(cyc),100)=0 And Isolated(cyc,50) Then pFoc(cyc)=0
-  Else 
+  Else
    pAgenda(cyc)=0
   EndIf
  EndIf
  ;follow weapon
  If pAgenda(cyc)=21 And no_weaps>0
-  If pWeapFoc(cyc)=0 
+  If pWeapFoc(cyc)=0
    Repeat
     pWeapFoc(cyc)=Rnd(0,no_weaps)
    Until WeaponProximity(cyc,pWeapFoc(cyc),200) Or pWeapFoc(cyc)=0
   EndIf
   If pHolding(cyc)>0 Then pWeapFoc(cyc)=0
-  If weapCarrier(pWeapFoc(cyc))>0 And AttackSensible(cyc,weapCarrier(pWeapFoc(cyc)))=0 Then pWeapFoc(cyc)=0 
+  If weapCarrier(pWeapFoc(cyc))>0 And AttackSensible(cyc,weapCarrier(pWeapFoc(cyc)))=0 Then pWeapFoc(cyc)=0
   If matchState=3 And matchCountOuts=3 And matchCage=0 And LegalMan(cyc) And InsideRing(weapX#(pWeapFoc(cyc)),weapZ#(pWeapFoc(cyc)),0)=0 Then pWeapFoc(cyc)=0
   If pWeapFoc(cyc)>0
    pTX#(cyc)=weapX#(pWeapFoc(cyc)) : pTZ#(cyc)=weapZ#(pWeapFoc(cyc))
@@ -523,7 +523,7 @@ Function AI(cyc)
   If pTX#(cyc)>80 Then pTX#(cyc)=80
   If pTX#(cyc)<-80 Then pTX#(cyc)=-80
   If pTZ#(cyc)>80 Then pTZ#(cyc)=80
-  If pTZ#(cyc)<-80 Then pTZ#(cyc)=-80 
+  If pTZ#(cyc)<-80 Then pTZ#(cyc)=-80
  EndIf
  ;make refs carry items out
  If matchState=3 And matchRules=>1 And pRole(cyc)=1 And pCarrying(cyc)>0 And InsideRing(pX#(cyc),pZ#(cyc),-15)
@@ -536,19 +536,19 @@ Function AI(cyc)
  ;stand still prior to entrances
  If matchState=0 Then pTX#(cyc)=pX#(cyc) : pTZ#(cyc)=pZ#(cyc)
  ;clock last agenda
- pOldAgenda(cyc)=pAgenda(cyc) 
+ pOldAgenda(cyc)=pAgenda(cyc)
  ;avoid inaccessible co-ord's
  If InsideRing(pTX#(cyc),pTZ#(cyc),0)
   If pTX#(cyc)>blockX1#(2) And pTX#(cyc)<>80 Then testTX#=pTX#(cyc) : pTX#(cyc)=80
-  If pTX#(cyc)<blockX2#(4) And pTX#(cyc)<>-80 Then testTX#=pTX#(cyc) : pTX#(cyc)=-80 
+  If pTX#(cyc)<blockX2#(4) And pTX#(cyc)<>-80 Then testTX#=pTX#(cyc) : pTX#(cyc)=-80
   If pTZ#(cyc)>blockZ1#(1) And pTZ#(cyc)<>80 Then testTZ#=pTZ#(cyc) : pTZ#(cyc)=80
-  If pTZ#(cyc)<blockZ2#(3) And pTZ#(cyc)<>-80 Then testTZ#=pTZ#(cyc) : pTZ#(cyc)=-80 
+  If pTZ#(cyc)<blockZ2#(3) And pTZ#(cyc)<>-80 Then testTZ#=pTZ#(cyc) : pTZ#(cyc)=-80
  EndIf
  If InsideRing(pSubX#(cyc),pSubZ#(cyc),0)
   If pSubX#(cyc)>blockX1#(2) And pSubX#(cyc)<>9999 And pSubX#(cyc)<>80 Then testSubX#=pSubX#(cyc) : pSubX#(cyc)=80
-  If pSubX#(cyc)<blockX2#(4) And pSubX#(cyc)<>9999 And pSubX#(cyc)<>-80 Then testSubX#=pSubX#(cyc) : pSubX#(cyc)=-80 
+  If pSubX#(cyc)<blockX2#(4) And pSubX#(cyc)<>9999 And pSubX#(cyc)<>-80 Then testSubX#=pSubX#(cyc) : pSubX#(cyc)=-80
   If pSubZ#(cyc)>blockZ1#(1) And pSubZ#(cyc)<>9999 And pSubZ#(cyc)<>80 Then testSubZ#=pSubZ#(cyc) : pSubZ#(cyc)=80
-  If pSubZ#(cyc)<blockZ2#(3) And pSubZ#(cyc)<>9999 And pSubZ#(cyc)<>-80 Then testSubZ#=pSubZ#(cyc) : pSubZ#(cyc)=-80 
+  If pSubZ#(cyc)<blockZ2#(3) And pSubZ#(cyc)<>9999 And pSubZ#(cyc)<>-80 Then testSubZ#=pSubZ#(cyc) : pSubZ#(cyc)=-80
  EndIf
  ;CONSIDER SUB-ROUTES
  ;reset once satisified
@@ -564,7 +564,7 @@ Function AI(cyc)
  EndIf
  ;leave aisles
  If pX#(cyc)>-25 And pX#(cyc)<25
-  If (pTZ#(cyc)<140 And pZ#(cyc)>140) Or (pTZ#(cyc)>-140 And pZ#(cyc)<-140) 
+  If (pTZ#(cyc)<140 And pZ#(cyc)>140) Or (pTZ#(cyc)>-140 And pZ#(cyc)<-140)
    If pTX#(cyc)<-15 And pSubX#(cyc)=9999 Then pSubX#(cyc)=-15
    If pTX#(cyc)>15 And pSubX#(cyc)=9999 Then pSubX#(cyc)=15
   EndIf
@@ -576,7 +576,7 @@ Function AI(cyc)
    If pX#(cyc)>15 And pSubX#(cyc)=9999 Then pSubX#(cyc)=15
    If pSubZ#(cyc)=9999 Then pSubZ#(cyc)=140
   EndIf
- EndIf  
+ EndIf
  ;enter south aisle
  If pTZ#(cyc)<-140 And pZ#(cyc)>-140 And (pX#(cyc)<-15 Or pX#(cyc)>15)
   If (pTX#(cyc)>-25 And pTX#(cyc)<-25) Or pTZ#(cyc)<-610
@@ -590,7 +590,7 @@ Function AI(cyc)
   If pTX#(cyc)<-25 And pSubX#(cyc)=9999 Then pSubX#(cyc)=-25
   If pTX#(cyc)>25 And pSubX#(cyc)=9999 Then pSubX#(cyc)=25
   If pSubZ#(cyc)=9999 Then pSubZ#(cyc)=625
- EndIf 
+ EndIf
  ;enter south backstage area
  If pTZ#(cyc)<-610 And pZ#(cyc)>-610
   If pX#(cyc)<-25 And pSubX#(cyc)=9999 Then pSubX#(cyc)=-25
@@ -604,7 +604,7 @@ Function AI(cyc)
    If pX#(cyc)>25 And pSubX#(cyc)=9999 Then pSubX#(cyc)=25
    If pSubZ#(cyc)=9999 Then pSubZ#(cyc)=610
   EndIf
- EndIf 
+ EndIf
  ;leave south backstage area
  If pTZ#(cyc)>-610 And pZ#(cyc)<-610 And (pX#(cyc)<-25 Or pX#(cyc)>25)
   If (pTX#(cyc)>-40 And pTX#(cyc)<-40) Or pTZ#(cyc)>-395
@@ -616,9 +616,9 @@ Function AI(cyc)
  ;pursue tag inside ring
  If TryingToTag(cyc)
   If pZ#(cyc)>blockZ1#(1) And pTZ#(cyc)>blockZ1#(1) And pSubZ#(cyc)=9999 Then pSubZ#(cyc)=blockZ1#(1)-5
-  If pX#(cyc)>blockX1#(2) And pTX#(cyc)>blockX1#(2) And pSubX#(cyc)=9999 Then pSubX#(cyc)=blockX1#(2)-5 
+  If pX#(cyc)>blockX1#(2) And pTX#(cyc)>blockX1#(2) And pSubX#(cyc)=9999 Then pSubX#(cyc)=blockX1#(2)-5
   If pZ#(cyc)<blockZ2#(3) And pTZ#(cyc)<blockZ2#(3) And pSubZ#(cyc)=9999 Then pSubZ#(cyc)=blockZ2#(3)+5
-  If pX#(cyc)<blockX2#(4) And pTX#(cyc)<blockX2#(4) And pSubX#(cyc)=9999 Then pSubX#(cyc)=blockX2#(4)+5 
+  If pX#(cyc)<blockX2#(4) And pTX#(cyc)<blockX2#(4) And pSubX#(cyc)=9999 Then pSubX#(cyc)=blockX2#(4)+5
  EndIf
  ;find path to apron positions
  If RingViable(cyc)=0 And InsideRing(pTX#(cyc),pTZ#(cyc),0) And InsideRing(pX#(cyc),pZ#(cyc),-15)=0
@@ -628,15 +628,15 @@ Function AI(cyc)
    If pX#(cyc)>blockX1#(2) And pTX#(cyc)<blockX2#(4) Then relocateZ=1
    If pZ#(cyc)=<blockZ1#(0) Or pZ#(cyc)=>blockZ2#(0)
     If pX#(cyc)=<blockX2#(0) And pTX#(cyc)=<blockX2#(0) And pTX#(cyc)>blockX1#(2) Then relocateX=1
-    If pX#(cyc)=>blockX1#(0) And pTX#(cyc)=>blockX1#(0) And pTX#(cyc)<blockX2#(4) Then relocateX=1 
+    If pX#(cyc)=>blockX1#(0) And pTX#(cyc)=>blockX1#(0) And pTX#(cyc)<blockX2#(4) Then relocateX=1
    EndIf
-  EndIf 
-  If pTX#(cyc)=>blockX1#(0) And pTX#(cyc)=<blockX2#(0) 
+  EndIf
+  If pTX#(cyc)=>blockX1#(0) And pTX#(cyc)=<blockX2#(0)
    If pZ#(cyc)<blockZ2#(3) And pTZ#(cyc)>blockZ1#(1) Then relocateX=1
    If pZ#(cyc)>blockZ1#(1) And pTZ#(cyc)<blockZ2#(3) Then relocateX=1
    If pX#(cyc)=<blockX1#(0) Or pX#(cyc)=>blockX2#(0)
     If pZ#(cyc)=<blockZ2#(0) And pTZ#(cyc)=<blockZ2#(0) And pTZ#(cyc)>blockZ1#(1) Then relocateZ=1
-    If pZ#(cyc)=>blockZ1#(0) And pTZ#(cyc)=>blockZ1#(0) And pTZ#(cyc)<blockZ2#(3) Then relocateZ=1 
+    If pZ#(cyc)=>blockZ1#(0) And pTZ#(cyc)=>blockZ1#(0) And pTZ#(cyc)<blockZ2#(3) Then relocateZ=1
    EndIf
   EndIf
   If relocateX=1 And pSubX#(cyc)=9999
@@ -645,7 +645,7 @@ Function AI(cyc)
   If relocateZ=1 And pSubZ#(cyc)=9999
    If pZ#(cyc)=>0 Then pSubZ#(cyc)=105 Else pSubZ#(cyc)=-105
   EndIf
- EndIf  
+ EndIf
  ;get off unhelpful aprons
  If RingViable(cyc)=0 And pPlatform(cyc)=>1 And pPlatform(cyc)=<4
   If pZ#(cyc)>blockZ1#(1) And pTZ#(cyc)<blockZ1#(1) And pSubZ#(cyc)=9999 Then pSubZ#(cyc)=105
@@ -659,16 +659,16 @@ Function AI(cyc)
    If (pX#(cyc)<blockX2#(4) And pTX#(cyc)>blockX1#(2)) Or (pX#(cyc)>blockX1#(2) And pTX#(cyc)<blockX2#(4))
     If pZ#(cyc)=>0 Then pSubZ#(cyc)=105 Else pSubZ#(cyc)=-105
    EndIf
-  EndIf 
+  EndIf
   If pTX#(cyc)=>blockX1#(0) And pTX#(cyc)=<blockX2#(0) And pSubX#(cyc)=9999
-   If (pZ#(cyc)<blockZ2#(3) And pTZ#(cyc)>blockZ1#(1)) Or (pZ#(cyc)>blockZ1#(1) And pTZ#(cyc)<blockZ2#(3)) 
+   If (pZ#(cyc)<blockZ2#(3) And pTZ#(cyc)>blockZ1#(1)) Or (pZ#(cyc)>blockZ1#(1) And pTZ#(cyc)<blockZ2#(3))
     If pX#(cyc)=>0 Then pSubX#(cyc)=105 Else pSubX#(cyc)=-105
    EndIf
   EndIf
- EndIf 
+ EndIf
  ;MOVEMENT INPUT
  ;get working values
- pActX#(cyc)=pTX#(cyc) : pActZ#(cyc)=pTZ#(cyc) 
+ pActX#(cyc)=pTX#(cyc) : pActZ#(cyc)=pTZ#(cyc)
  If pSubX#(cyc)<>9999 Then pActX#(cyc)=pSubX#(cyc) : pFollow(cyc)=1
  If pSubZ#(cyc)<>9999 Then pActZ#(cyc)=pSubZ#(cyc) : pFollow(cyc)=1
  ;check satisfied
@@ -734,16 +734,16 @@ Function AI(cyc)
   If pAnim(cyc)=11 And DirPressed(cyc) And SatisfiedAngle(RequestAngle#(cyc),pA#(v),45) And BlockClear(cyc,pA#(v),10) Then intensity=1000
   If pAnim(cyc)=30 And pAnimTim(cyc)<Int(20/pAnimSpeed#(cyc)) Then intensity=1000
   If pPlatform(cyc)=>5 Or (pPlatform(cyc)=>1 And pPlatform(cyc)=<4 And pY#(v)<pY#(cyc)) Then intensity=1000
-  If FindThreat(cyc)<10 And pPinning(v)=0 And pGrappling(v)=0 
+  If FindThreat(cyc)<10 And pPinning(v)=0 And pGrappling(v)=0
    If pRole(cyc)=1 And pWarned(v)=0 Then intensity=10000
-   If LegalMan(cyc)=0 And pAngerTim(cyc,v)=0 And pChaosTim(cyc)=0 Then intensity=10000 
+   If LegalMan(cyc)=0 And pAngerTim(cyc,v)=0 And pChaosTim(cyc)=0 Then intensity=10000
    If LegalMan(v)=0 And pAngerTim(cyc,v)=0 And pChaosTim(v)=0 Then intensity=10000
    If pTeam(cyc)=pTeam(v) And pAngerTim(cyc,v)=0 Then intensity=10000
    If matchState<>3 And pAngerTim(cyc,v)=0 Then intensity=10000
    If RushViable(cyc) Then intensity=10000
   EndIf
   If matchTeams=2 And LegalMan(cyc)=0 And TagProximity(cyc,80) And pPlatform(cyc)=>1 And pPlatform(cyc)=<4 And pY#(v)<pY#(cyc) Then intensity=10000
-  If matchCage>0 And pPlatform(cyc)=>91 And pPlatform(cyc)=<98 And matchCountOuts=3 Then intensity=1000000 
+  If matchCage>0 And pPlatform(cyc)=>91 And pPlatform(cyc)=<98 And matchCountOuts=3 Then intensity=1000000
   If pRole(cyc)=1
    If pWarned(v)=0 And intensity<1000 Then intensity=1000
    If RefViable(v)>20 And intensity>2500 Then intensity=2500
@@ -755,7 +755,7 @@ Function AI(cyc)
   If pAnim(v)=>80 And pAnim(v)=<89 Then blockOffset#=2.0
   distance#=GetDistance#(pX#(cyc),pZ#(cyc),RealX#(v),RealZ#(v))
   If AttackViable(v)=<2 And GetDistance#(pX#(cyc),pZ#(cyc),pLimbX#(v,1),pLimbZ#(v,1))<distance#
-   distance#=GetDistance#(pX#(cyc),pZ#(cyc),pLimbX#(v,1),pLimbZ#(v,1))  
+   distance#=GetDistance#(pX#(cyc),pZ#(cyc),pLimbX#(v,1),pLimbZ#(v,1))
   EndIf
   ;weak attacks
   If pAnim(v)<>701
@@ -805,7 +805,7 @@ Function AI(cyc)
   ;avoid repetitive spitting
   If cAttack(cyc)=1 And (cRun(cyc)=0 Or cGrapple(cyc)=1)
    If attackWeapon(3,charAttack(pChar(cyc),3))=>10 Or (pHolding(cyc)>0 And weapType(pHolding(cyc))=>16 And weapType(pHolding(cyc))=<17)
-    If pBlindTim(v)>0 Then cAttack(cyc)=1 : cRun(cyc)=0 : cGrapple(cyc)=0 
+    If pBlindTim(v)>0 Then cAttack(cyc)=1 : cRun(cyc)=0 : cGrapple(cyc)=0
    EndIf
   EndIf
   ;negate action
@@ -851,14 +851,14 @@ Function AI(cyc)
  pBlockTim(cyc)=pBlockTim(cyc)-1
  If pBlockTim(cyc)<0 Then pBlockTim(cyc)=0
  If matchState=3 And v>0 And pFoc(v)=cyc And pTeam(cyc)<>pTeam(v) And pRole(v)=0 And pRole(cyc)=0 And pAgenda(cyc)=1 And InProximity(cyc,v,50) And pY#(cyc)=pY#(v) And AttackViable(v)=1 And pDizzyTim(v)=0 And pBlindTim(v)=0 And pMomentum(v)=0 And RushViable(cyc)=0
-  chance=2000 
+  chance=2000
   If pSpecial(cyc)>0 Then chance=chance*2
   If pHP(cyc)<pHP(v)/2 Then chance=chance/2
   If matchShoot>0 Then chance=chance/2
   randy=Rnd(0,chance)
   If randy=0 And pBlockTim(cyc)=0 Then pBlockTim(cyc)=Rnd(20,200)
   If pBlockTim(cyc)>0 Then cBlock(cyc)=1
- EndIf 
+ EndIf
  ;taunts
  If RushViable(cyc)=0
   chance=1000
@@ -870,7 +870,7 @@ Function AI(cyc)
   If randy=<1 Then cTaunt(cyc)=1
  EndIf
  ;ref triggers
- If RefActViable(cyc,pFoc(cyc)) 
+ If RefActViable(cyc,pFoc(cyc))
   If pChecked(pFoc(cyc))=0 And pCountTim(cyc)=0 Then cTaunt(cyc)=1 Else cTaunt(cyc)=0
  EndIf
  ;ITEM INTERACTION
@@ -903,7 +903,7 @@ Function AI(cyc)
  dropBlock=0
  If matchState=<2 And matchPromo>0 And weapType(pHolding(cyc))=5
   If cyc=promoActor(1) Or cyc=promoActor(2) Or cyc=promoActor(3) Then dropBlock=1
- EndIf 
+ EndIf
  If matchState=4 And weapType(pHolding(cyc))=FindReward(cyc) Then dropBlock=1
  If pHolding(cyc)>0 And dropBlock=0
   randy=Rnd(0,1000)
@@ -914,9 +914,9 @@ Function AI(cyc)
   EndIf
   If matchState=4 And FindReward(cyc)>0 And weapType(pHolding(cyc))<>FindReward(cyc) Then randy=0
   If randy=0 Then cPickUp(cyc)=1 : cGrapple(cyc)=0 : cRun(cyc)=0 : cAttack(cyc)=0
-  If randy=1 Or (randy=>1 And randy=<5 And weapExplodable(weapType(pHolding(cyc)))) Or (randy=>1 And randy=<5 And pRole(cyc)=1) 
+  If randy=1 Or (randy=>1 And randy=<5 And weapExplodable(weapType(pHolding(cyc)))) Or (randy=>1 And randy=<5 And pRole(cyc)=1)
    If weapWear(pHolding(cyc))=0 And pTeam(pFoc(cyc))<>pTeam(cyc)
-    If Isolated(cyc,30) Or pRole(cyc)=1 Then cGrapple(cyc)=1 : cPickUp(cyc)=0 : cRun(cyc)=0 : cAttack(cyc)=0 
+    If Isolated(cyc,30) Or pRole(cyc)=1 Then cGrapple(cyc)=1 : cPickUp(cyc)=0 : cRun(cyc)=0 : cAttack(cyc)=0
    EndIf
   EndIf
  EndIf
@@ -932,7 +932,7 @@ Function AI(cyc)
  If cUpTim(cyc)>0 And cUpTim(cyc)>cDownTim(cyc) Then cUp(cyc)=1
  If cDownTim(cyc)>0 And cDownTim(cyc)>cUpTim(cyc) Then cDown(cyc)=1
  If cLeftTim(cyc)>0 And cLeftTim(cyc)>cRightTim(cyc) Then cLeft(cyc)=1
- If cRightTim(cyc)>0 And cRightTim(cyc)>cLeftTim(cyc) Then cRight(cyc)=1 
+ If cRightTim(cyc)>0 And cRightTim(cyc)>cLeftTim(cyc) Then cRight(cyc)=1
  ;protect pin
  If ProtectPin(cyc)>0 Then ResetInput(cyc)
 End Function
@@ -943,9 +943,9 @@ End Function
 Function TranslateInput(cyc)
  ;declaw
  If matchState=<2 Then cAttack(cyc)=0
- If matchState=3 And LegalMan(cyc)=0 And pChaosTim(cyc)=0 And pRole(cyc)<>1 And pRole(cyc)<>3 
+ If matchState=3 And LegalMan(cyc)=0 And pChaosTim(cyc)=0 And pRole(cyc)<>1 And pRole(cyc)<>3
   If InsideRing(pX#(cyc),pZ#(cyc),-15) Or (pPlatform(cyc)=>5 And pPlatform(cyc)=<8) Then cAttack(cyc)=0 : cGrapple(cyc)=0
- EndIf 
+ EndIf
  If matchState=<1 And pOutTim(cyc)<2 Then cTaunt(cyc)=0 : cSwitch(cyc)=0
  If matchState=2 And pControl(cyc)=0
   If cyc=speaker Or InProximity(cyc,speaker,50) Then cUp(cyc)=0 : cDown(cyc)=0 : cLeft(cyc)=0 : cRight(cyc)=0
@@ -961,13 +961,13 @@ Function TranslateInput(cyc)
   If cUpTim(cyc)>0 Then cUp(cyc)=1
   If cDownTim(cyc)>0 Then cDown(cyc)=1
   If cLeftTim(cyc)>0 Then cLeft(cyc)=1
-  If cRightTim(cyc)>0 Then cRight(cyc)=1 
+  If cRightTim(cyc)>0 Then cRight(cyc)=1
  EndIf
  If matchState=1 And pOutTim(cyc)=<1 ;(pOutTim(cyc)=<1 Or (pControl(cyc)=0 And pOutTim(cyc)=2))
   If HumanClear(cyc,RequestAngle#(cyc),15)=0 Then cUp(cyc)=0 : cDown(cyc)=0 : cLeft(cyc)=0 : cRight(cyc)=0 : pSatisfied(cyc)=50
  EndIf
  ;movement
- If DirPressed(cyc) And pAnim(cyc)<11 And pMomentum(cyc)=0 Then ChangeAnim(cyc,11) 
+ If DirPressed(cyc) And pAnim(cyc)<11 And pMomentum(cyc)=0 Then ChangeAnim(cyc,11)
  ;lucid actions
  If pDizzyTim(cyc)=0 And pBlindTim(cyc)=0 And pMomentum(cyc)=0
   ;switch focus
@@ -987,7 +987,7 @@ Function TranslateInput(cyc)
   If pDashState(cyc)=0 And DirPressed(cyc) And pAnim(cyc)<>30 Then pDashState(cyc)=1 : pDashA#(cyc)=RequestAngle#(cyc)
   If pDashState(cyc)=1 And DirPressed(cyc)=0 Then pDashState(cyc)=2
   If pDashState(cyc)=>2 Then pDashTim(cyc)=pDashTim(cyc)+1 Else pDashTim(cyc)=0
-  If pDashState(cyc)=2 And pDashTim(cyc)>15 Then pDashState(cyc)=0 
+  If pDashState(cyc)=2 And pDashTim(cyc)>15 Then pDashState(cyc)=0
   If pControl(cyc)>0 And pDashState(cyc)=2 And DirPressed(cyc)
    If SatisfiedAngle(RequestAngle#(cyc),pDashA#(cyc),45) Then pDashState(cyc)=3
   EndIf
@@ -1013,14 +1013,14 @@ Function TranslateInput(cyc)
   If pAnim(cyc)=>80 And pAnim(cyc)=<85 And DirPressed(cyc)
    If SatisfiedAngle(RequestAngle#(cyc),CleanAngle#(pA#(cyc)+77),35) Then pBodyTXA#(cyc)=0 : pBodyTZA#(cyc)=20 ;west
    If SatisfiedAngle(RequestAngle#(cyc),CleanAngle#(pA#(cyc)+135),23) Then pBodyTXA#(cyc)=-25 : pBodyTZA#(cyc)=10 ;south west
-   If SatisfiedAngle(RequestAngle#(cyc),CleanAngle#(pA#(cyc)+180),23) Then pBodyTXA#(cyc)=-40 : pBodyTZA#(cyc)=0 ;south  
-   If SatisfiedAngle(RequestAngle#(cyc),CleanAngle#(pA#(cyc)+225),23) Then pBodyTXA#(cyc)=-25 : pBodyTZA#(cyc)=-15 ;south east 
-   If SatisfiedAngle(RequestAngle#(cyc),CleanAngle#(pA#(cyc)+283),35) Then pBodyTXA#(cyc)=0 : pBodyTZA#(cyc)=-30 ;east 
+   If SatisfiedAngle(RequestAngle#(cyc),CleanAngle#(pA#(cyc)+180),23) Then pBodyTXA#(cyc)=-40 : pBodyTZA#(cyc)=0 ;south
+   If SatisfiedAngle(RequestAngle#(cyc),CleanAngle#(pA#(cyc)+225),23) Then pBodyTXA#(cyc)=-25 : pBodyTZA#(cyc)=-15 ;south east
+   If SatisfiedAngle(RequestAngle#(cyc),CleanAngle#(pA#(cyc)+283),35) Then pBodyTXA#(cyc)=0 : pBodyTZA#(cyc)=-30 ;east
    If pHolding(cyc)>0 And weapHold(weapType(pHolding(cyc)))=1 Then pBodyTXA#(cyc)=pBodyTXA#(cyc)/2
   EndIf
   ;flying triggers
   If pAnim(cyc)<30 Or (pAnim(cyc)=>48 And pAnim(cyc)=<49) Or (pAnim(cyc)=>231 And pAnim(cyc)=<232)
-   viable=1 
+   viable=1
    If pFoc(cyc)>0 And (pY#(cyc)=pY#(pFoc(cyc)) Or (pAnim(pFoc(cyc))=40 And pY#(cyc)=wStage#))
     If InProximity(cyc,pFoc(cyc),30) Or pPlatform(cyc)=pPlatform(pFoc(cyc)) Or (pPlatform(cyc)=<4 And pPlatform(pFoc(cyc))=<4) Then viable=0
    EndIf
@@ -1050,11 +1050,11 @@ Function TranslateInput(cyc)
      PositionEntity dummy,pX#(cyc),pY#(cyc),pZ#(cyc)
      RotateEntity dummy,0,pA#(cyc),0
      MoveEntity dummy,0,0,60
-     If InsideRing(EntityX(dummy),EntityZ(dummy),0)=0 And matchCage=0    
+     If InsideRing(EntityX(dummy),EntityZ(dummy),0)=0 And matchCage=0
       If charAgility(pChar(cyc))=>70 And InsideRing(pX#(pFoc(cyc)),pZ#(pFoc(cyc)),5)=0
        If crushTope(5,charCrush(pChar(cyc),5))>0 Then tope=74
        If AttackViable(pFoc(cyc))=1 And attackTope(5,charAttack(pChar(cyc),5))>0 Then tope=64
-      EndIf  
+      EndIf
      EndIf
      If tope=0 Then ChangeAnim(cyc,68)
      If tope>0 Then ChangeAnim(cyc,tope)
@@ -1063,7 +1063,7 @@ Function TranslateInput(cyc)
   EndIf
   ;attacks
   If cAttack(cyc)=1 And pAnim(cyc)<40 And (pPlatform(cyc)=<4 Or pPlatform(cyc)>8)
-   runup=FindRunUp(cyc) 
+   runup=FindRunUp(cyc)
    If NearGrounded(cyc,30)
     anim=71 ;stomp
     If cRun(cyc)=1 Then anim=72 ;crush
@@ -1073,12 +1073,12 @@ Function TranslateInput(cyc)
     If (pControl(cyc)>0 And DirPressed(cyc)) Or (pControl(cyc)=0 And cAttackAgenda(cyc)>0)
      anim=60 ;upper attack
      If pFoc(cyc)>0 And AttackViable(pFoc(cyc))=2 And (pHolding(cyc)=0 Or weapHold(weapType(pHolding(cyc)))=0) Then anim=61 ;low translation
-    EndIf    
+    EndIf
     If cRun(cyc)=1 Then anim=62 ;big attack
     If runup=1 Then anim=63 ;running attack
    EndIf
    If anim>0 Then ChangeAnim(cyc,anim)
-  EndIf 
+  EndIf
   ;grapple / throw weapon
   If cGrapple(cyc)=1 And pAnim(cyc)<40
    If pHolding(cyc)>0 And weapWear(pHolding(cyc))=0
@@ -1108,13 +1108,13 @@ Function TranslateInput(cyc)
      If anim>0 And pAnim(v)<>anim
       ChangeAnim(v,anim) : pHurtTim(v)=5
       If (anim=139 Or anim=159) And pOldAnim(v)<>151 Then SharpTransition(v,anim,0,180)
-     EndIf 
+     EndIf
      If pDT(v)<50 Then pDT(v)=50
     EndIf
-   EndIf 
+   EndIf
   EndIf
   ;refereeing
-  If cTaunt(cyc)=1 And RefActViable(cyc,pFoc(cyc))=0 And pAnim(cyc)<40 
+  If cTaunt(cyc)=1 And RefActViable(cyc,pFoc(cyc))=0 And pAnim(cyc)<40
    For v=1 To no_plays
     If RefActViable(cyc,v)>0 Then pFoc(cyc)=v
    Next
@@ -1122,7 +1122,7 @@ Function TranslateInput(cyc)
   If cTaunt(cyc)=1 And RefActViable(cyc,pFoc(cyc)) And pAnim(cyc)<40
    duty=RefViable(pFoc(cyc))
    If FindInteractions(cyc)<>3 Or (duty<>5 And duty<>15)
-    InstantTurn(cyc,p(pFoc(cyc))) 
+    InstantTurn(cyc,p(pFoc(cyc)))
     anim=178
     If (duty=2 Or duty=12) And pAnim(pFoc(cyc))=309 Then anim=183
     If duty=5 Or duty=15
@@ -1131,7 +1131,7 @@ Function TranslateInput(cyc)
       If v<>pFoc(cyc) And (RefViable(v)=5 Or RefViable(v)=15)
        anim=171
        PositionEntity dummy,GetCentre#(RealX#(pFoc(cyc)),RealX#(v)),pY#(cyc),GetCentre#(RealZ#(pFoc(cyc)),RealZ#(v))
-       InstantTurn(cyc,dummy) 
+       InstantTurn(cyc,dummy)
       EndIf
      Next
      matchCounter=cyc
@@ -1147,7 +1147,7 @@ Function TranslateInput(cyc)
   If cTaunt(cyc)=1 And RefActViable(cyc,pFoc(cyc))=0
    If pAnim(cyc)<40 Or (pAnim(cyc)=>48 And pAnim(cyc)=<49)
     issue=FindInteractions(cyc)
-    If issue>0 
+    If issue>0
      If issue=2
       InstantTurn(cyc,FindChild(world,"Ring0"+NearestCorner(pX#(cyc),pZ#(cyc))))
       ChangeAnim(cyc,703)
@@ -1159,8 +1159,8 @@ Function TranslateInput(cyc)
      EndIf
     Else
      anim=190
-     If pControl(cyc)>0 And DirPressed(cyc) Then anim=191 
-     If pControl(cyc)=0 Then anim=Rnd(190,191) 
+     If pControl(cyc)>0 And DirPressed(cyc) Then anim=191
+     If pControl(cyc)=0 Then anim=Rnd(190,191)
      If pRole(cyc)=1 Then anim=Rnd(190,193)
      If pRole(cyc)=2 Then anim=Rnd(190,196)
      If matchState=4 And pTeam(cyc)=pTeam(matchWinner)
@@ -1172,7 +1172,7 @@ Function TranslateInput(cyc)
      If pSpecial(cyc)>0 Then anim=192
      If pHolding(cyc)>0
       If weapName$(weapType(pHolding(cyc)))="Microphone" And matchState=>3 Then anim=197
-      If weapName$(weapType(pHolding(cyc)))="Trophy" Then anim=198 
+      If weapName$(weapType(pHolding(cyc)))="Trophy" Then anim=198
       If weapFile$(weapType(pHolding(cyc)))="Belt"
        If weapWear(pHolding(cyc))=0
         anim=Rnd(216,217)
@@ -1186,10 +1186,10 @@ Function TranslateInput(cyc)
      ChangeAnim(cyc,anim)
     EndIf
    EndIf
-  EndIf 
+  EndIf
   ;purify pick-up command
   If cPickUp(cyc)=1
-   If pAnim(cyc)=>300 Then cPickUpFree(cyc)=0 
+   If pAnim(cyc)=>300 Then cPickUpFree(cyc)=0
   Else
    cPickUpFree(cyc)=1
   EndIf
@@ -1199,7 +1199,7 @@ Function TranslateInput(cyc)
    picker=0
    If pHolding(cyc)=0
     v=NearestWeapon(cyc)
-    range#=10+weapSize#(weapType(v)) 
+    range#=10+weapSize#(weapType(v))
     If weapY#(v)>pY#(cyc)+10 Then range#=range#+10
     If weapCarrier(v)>0 Then range#=20+(weapSize#(weapType(v))/2)
     If WeaponProximity(cyc,v,range#) Then picker=v
@@ -1211,7 +1211,7 @@ Function TranslateInput(cyc)
      If ItemProximity(cyc,v,30) And pY#(cyc)>iY#(v)-10 And pY#(cyc)<iY#(v)+10 And iCarrier(v)=0 And iCarryAnim(iType(v),iState(v))=>0 And iAnim(v)=0 And pAnim(cyc)<40
       If ItemCollide(cyc,v,pX#(cyc),pZ#(cyc),2)
        InstantTurn(cyc,i(v))
-       anim=200 
+       anim=200
        If pHolding(cyc)>0 And weapBurning(pHolding(cyc))>0 And (game=0 Or fedProduction(charFed(gamChar),9)>0)
         randy=Rnd(0,1)
         If randy=0 And pControl(cyc)=0 And pRole(cyc)<>1 And iFlammable(iType(v)) And iBurning(v)=0 Then anim=214
@@ -1223,7 +1223,7 @@ Function TranslateInput(cyc)
     Next
    EndIf
    ;drop weapon
-   If pHolding(cyc)>0 And pAnim(cyc)<40 And picker=0 
+   If pHolding(cyc)>0 And pAnim(cyc)<40 And picker=0
     anim=212
     If weapWear(pHolding(cyc))>0 Then anim=217+weapWear(pHolding(cyc))
     ChangeAnim(cyc,anim)
@@ -1231,17 +1231,17 @@ Function TranslateInput(cyc)
    ;execute weapon pick-up
    v=picker
    If v=0 And pAnim(cyc)<40 Then v=NearestWeapon(cyc)
-   If v>0 And weapCarrier(v)=0 
+   If v>0 And weapCarrier(v)=0
     InstantTurn(cyc,weap(v))
     If weapY#(v)>pY#(cyc)+15 Then anim=211 Else anim=210
     If game=0 Or fedProduction(charFed(gamChar),9)>0
      randy=Rnd(0,15)
      If randy=0 And pControl(cyc)=0 And pRole(cyc)<>1 And weapFlammable(weapType(v)) And weapBurning(v)=0 Then anim=214
      If pControl(cyc)>0 And cRun(cyc)=1 Then anim=214
-    EndIf 
+    EndIf
     ChangeAnim(cyc,anim)
    EndIf
-   If v>0 And weapCarrier(v)>0 And matchState=>3 
+   If v>0 And weapCarrier(v)>0 And matchState=>3
     InstantTurn(cyc,pLimb(weapCarrier(v),21))
     If weapY#(v)>pY#(cyc)+5 Then anim=211 Else anim=210
     ChangeAnim(cyc,anim)
@@ -1270,11 +1270,11 @@ Function SwapControls(cyc,v,style) ;0=naturally, 1=fiddled
 End Function
 
 ;RESET INPUT
-Function ResetInput(cyc) 
+Function ResetInput(cyc)
  ;directions
  cUp(cyc)=0 : cDown(cyc)=0
  cLeft(cyc)=0 : cRight(cyc)=0
- ;commands 
+ ;commands
  cAttack(cyc)=0 : cGrapple(cyc)=0
  cRun(cyc)=0 : cPickUp(cyc)=0
  cSwitch(cyc)=0 : cTaunt(cyc)=0
@@ -1298,7 +1298,7 @@ End Function
 ;FIND RUN UP
 Function FindRunUp(cyc)
  value=0
- If (pAnim(cyc)=12 And pAnimTim(cyc)=>5) Or pOldAnim(cyc)=44 Then value=1 
+ If (pAnim(cyc)=12 And pAnimTim(cyc)=>5) Or pOldAnim(cyc)=44 Then value=1
  If pAnim(cyc)=30 And pDashA#(cyc)=pA#(cyc) Then value=1
  Return value
 End Function
@@ -1337,7 +1337,7 @@ End Function
 Function RequestDirection(cyc,angle#,hold)
  ;reset status
  value=0
- orient#=EntityYaw#(cam) 
+ orient#=EntityYaw#(cam)
  If camType=>8 And camType=<9 And cyc=camFoc Then orient#=pA#(cyc)
  ;standard directions
  If SatisfiedAngle(angle#,CleanAngle#(orient#),45) Then cUpTim(cyc)=hold ;north
@@ -1345,7 +1345,7 @@ Function RequestDirection(cyc,angle#,hold)
  If SatisfiedAngle(angle#,CleanAngle#(orient#+180),45) Then cDownTim(cyc)=hold ;south
  If SatisfiedAngle(angle#,CleanAngle#(orient#+90),45) Then cLeftTim(cyc)=hold ;west
  ;diagonal directions
- If SatisfiedAngle(angle#,CleanAngle#(orient#+315),45) Then cRightTim(cyc)=hold : cUpTim(cyc)=hold ;north east 
+ If SatisfiedAngle(angle#,CleanAngle#(orient#+315),45) Then cRightTim(cyc)=hold : cUpTim(cyc)=hold ;north east
  If SatisfiedAngle(angle#,CleanAngle#(orient#+225),45) Then cRightTim(cyc)=hold : cDownTim(cyc)=hold ;south east
  If SatisfiedAngle(angle#,CleanAngle#(orient#+135),45) Then cLeftTim(cyc)=hold : cDownTim(cyc)=hold ;south west
  If SatisfiedAngle(angle#,CleanAngle#(orient#+45),45) Then cLeftTim(cyc)=hold : cUpTim(cyc)=hold ;north west
@@ -1396,7 +1396,7 @@ End Function
 Function SwitchFocus(cyc)
  ;nearest enemy
  pOldFoc(cyc)=pFoc(cyc)
- If pFocTim(cyc)=0 
+ If pFocTim(cyc)=0
   pFoc(cyc)=0 : hi#=100
   For v=1 To no_plays
    If cyc<>v And v<>pOldFoc(cyc) And pHidden(v)=0 And (pTeam(cyc)<>pTeam(v) Or pRole(cyc)=2 Or matchState=4) And (LegalMan(v) Or LegalMan(cyc)=0 Or pRole(v)=0 Or pChaosTim(v)>0 Or matchState=4)
@@ -1407,7 +1407,7 @@ Function SwitchFocus(cyc)
   Next
  EndIf
  ;browse all
- If pFocTim(cyc)>0 Or pFoc(cyc)=pOldFoc(cyc) 
+ If pFocTim(cyc)>0 Or pFoc(cyc)=pOldFoc(cyc)
   Repeat
    satisfied=1
    pFoc(cyc)=pFoc(cyc)+1
@@ -1429,10 +1429,10 @@ Function GetNewFoc(cyc)
  Repeat
   ;get ideal first choice
   satisfied=1
-  pFoc(cyc)=Rnd(1,no_plays) 
-  If matchState<>0 And matchState<>3 Then pFoc(cyc)=Rnd(0,no_plays)  
+  pFoc(cyc)=Rnd(1,no_plays)
+  If matchState<>0 And matchState<>3 Then pFoc(cyc)=Rnd(0,no_plays)
   randy=Rnd(0,1)
-  If randy=0 And matchState=3 And pRole(cyc)=0 And matchLeader>0 Then pFoc(cyc)=matchLeader 
+  If randy=0 And matchState=3 And pRole(cyc)=0 And matchLeader>0 Then pFoc(cyc)=matchLeader
   If pRole(cyc)=0
    For v=1 To no_wrestlers
     randy=Rnd(0,1)
@@ -1440,24 +1440,24 @@ Function GetNewFoc(cyc)
    Next
   EndIf
   randy=Rnd(0,1)
-  If randy=0 And pRole(cyc)=2 And pClient(cyc)>0 And pChaosTim(cyc)=0 Then pFoc(cyc)=pClient(cyc) 
+  If randy=0 And pRole(cyc)=2 And pClient(cyc)>0 And pChaosTim(cyc)=0 Then pFoc(cyc)=pClient(cyc)
   ;avoid friends
   randy=Rnd(0,1)
-  If randy=0 And charRelationship(pChar(cyc),pChar(pFoc(cyc)))>0 And pRole(cyc)<>2 Then satisfied=0  
+  If randy=0 And charRelationship(pChar(cyc),pChar(pFoc(cyc)))>0 And pRole(cyc)<>2 Then satisfied=0
   ;avoid irrelevances
   If matchState=0 Or matchState=3 Or matchEnter=0
    If pRole(cyc)=<1 And pRole(pFoc(cyc))<>0 Then satisfied=0 ;non-wrestlers
    If (LegalMan(cyc) Or pRole(cyc)=1) And LegalMan(pFoc(cyc))=0 Then satisfied=0 ;illegals
   EndIf
   ;avoid suicide!
-  If pTeam(cyc)=pTeam(pFoc(cyc)) And charRelationship(pChar(cyc),pChar(pFoc(cyc)))=>0 And pRole(cyc)<>2 And matchState<>4 Then satisfied=0 
-  If pFoc(cyc)=cyc Then satisfied=0 
+  If pTeam(cyc)=pTeam(pFoc(cyc)) And charRelationship(pChar(cyc),pChar(pFoc(cyc)))=>0 And pRole(cyc)<>2 And matchState<>4 Then satisfied=0
+  If pFoc(cyc)=cyc Then satisfied=0
   ;avoid unavailable
   If matchState>0
    randy=Rnd(0,2)
-   If randy=0 And pFoc(cyc)>0 And InProximity(cyc,pFoc(cyc),100)=0 Then satisfied=0 
-   If randy=<1 And pFoc(cyc)>0 And InProximity(cyc,pFoc(cyc),200)=0 Then satisfied=0 
-   If pOutTim(pFoc(cyc))=0 Or pHidden(pFoc(cyc))>0 Then satisfied=0 
+   If randy=0 And pFoc(cyc)>0 And InProximity(cyc,pFoc(cyc),100)=0 Then satisfied=0
+   If randy=<1 And pFoc(cyc)>0 And InProximity(cyc,pFoc(cyc),200)=0 Then satisfied=0
+   If pOutTim(pFoc(cyc))=0 Or pHidden(pFoc(cyc))>0 Then satisfied=0
   EndIf
   ;last resort
   its=its+1
@@ -1495,7 +1495,7 @@ Function FindThreat(cyc) ;1=potential high, 2=potential low, 11=active high, 12=
     ;genuine threat
     active=1
     If pSting(v)=0 Then active=0
-    If pAnim(v)=>60 And pAnim(v)=<63 
+    If pAnim(v)=>60 And pAnim(v)=<63
      style=pAnim(v)-59
      If pAnimTim(v)>Int(attackExpire(style,charAttack(pChar(v),style))/pAnimSpeed#(v)) Then active=0
     EndIf
@@ -1512,7 +1512,7 @@ Function FindThreat(cyc) ;1=potential high, 2=potential low, 11=active high, 12=
     EndIf
    EndIf
   EndIf
- EndIf 
+ EndIf
  Return threat
 End Function
 
@@ -1601,7 +1601,7 @@ Function BehindRailings(x#,z#)
  Return value
 End Function
 
-;FIND CLIMBING 
+;FIND CLIMBING
 Function FindClimbing(cyc)
  ;CLIMBABLE BLOCKS
  If pPlatform(cyc)=0 And pAnim(cyc)=>11 And pAnim(cyc)=<12
@@ -1609,14 +1609,14 @@ Function FindClimbing(cyc)
    If blockClimb(v)>0 And pPlatform(cyc)=0
     If RequestBlock(cyc,v)
      If cRun(cyc)=1 Then pFriction(cyc)=pFriction(cyc)+4 Else pFriction(cyc)=pFriction(cyc)+2
-     If pFriction(cyc)>20 
+     If pFriction(cyc)>20
       pPlatformX#(cyc)=GetCentre#(blockPlatX1#(v),blockPlatX2#(v))
       If blockPlatZ1#(v)=blockPlatZ2#(v) And blockPlatX1#(v)<>blockPlatX2#(v) And pX#(cyc)>blockX1#(v)+10 And pX#(cyc)<blockX2#(v)-10 Then pPlatformX#(cyc)=pX#(cyc)
       If blockClimb(v)=1 Or blockClimb(v)=3 Then pPlatformX#(cyc)=pX#(cyc)
       pPlatformZ#(cyc)=GetCentre#(blockPlatZ1#(v),blockPlatZ2#(v))
       If blockPlatX1#(v)=blockPlatX2#(v) And blockPlatZ1#(v)<>blockPlatZ2#(v) And pZ#(cyc)>blockZ1#(v)+10 And pZ#(cyc)<blockZ2#(v)-10 Then pPlatformZ#(cyc)=pZ#(cyc)
       If blockClimb(v)=2 Or blockClimb(v)=4 Then pPlatformZ#(cyc)=pZ#(cyc)
-      pPlatformY#(cyc)=blockY2#(v) 
+      pPlatformY#(cyc)=blockY2#(v)
       If PlatformClear(0,pPlatformX#(cyc),pPlatformZ#(cyc))
        PositionEntity dummy,pPlatformX#(cyc),pY#(cyc),pPlatformZ#(cyc)
        InstantTurn(cyc,dummy)
@@ -1647,7 +1647,7 @@ Function FindClimbing(cyc)
      If blockClimb(block)=1 Then pA#(cyc)=180
      If blockClimb(block)=2 Then pA#(cyc)=90
      If blockClimb(block)=3 Then pA#(cyc)=0
-     If blockClimb(block)=4 Then pA#(cyc)=270 
+     If blockClimb(block)=4 Then pA#(cyc)=270
      ChangeAnim(cyc,56)
     Else
      pA#(cyc)=RequestAngle#(cyc)
@@ -1812,7 +1812,7 @@ Function FindClimbing(cyc)
    EndIf
   EndIf
   ;east side
-  If SatisfiedAngle(RequestAngle#(cyc),90,accessRange) And pX#(cyc)=>blockX2#(0) And pZ#(cyc)>blockZ1#(0)+30 And pZ#(cyc)<blockZ2#(0)-30 
+  If SatisfiedAngle(RequestAngle#(cyc),90,accessRange) And pX#(cyc)=>blockX2#(0) And pZ#(cyc)>blockZ1#(0)+30 And pZ#(cyc)<blockZ2#(0)-30
    pFriction(cyc)=pFriction(cyc)+2
    If pFriction(cyc)>15 And HumanClear(cyc,90,15) And ItemClear(cyc,90,15)
     If pCarrying(cyc)=0 Then pPlatform(cyc)=2 : pA#(cyc)=90 : ChangeAnim(cyc,40)
@@ -1853,14 +1853,14 @@ Function FindClimbing(cyc)
   ;south ropes
   If pPlatform(cyc)=3 And SatisfiedAngle(RequestAngle#(cyc),0,accessRange) And pX#(cyc)>blockX1#(0)+30 And pX#(cyc)<blockX2#(0)-30
    pFriction(cyc)=pFriction(cyc)+2
-   If pFriction(cyc)>15 And HumanClear(cyc,0,15) And ItemClear(cyc,0,15) Then pA#(cyc)=0 : ChangeAnim(cyc,41) 
+   If pFriction(cyc)>15 And HumanClear(cyc,0,15) And ItemClear(cyc,0,15) Then pA#(cyc)=0 : ChangeAnim(cyc,41)
   EndIf
   ;west ropes
   If pPlatform(cyc)=4 And SatisfiedAngle(RequestAngle#(cyc),270,accessRange) And pZ#(cyc)>blockZ1#(0)+30 And pZ#(cyc)<blockZ2#(0)-30
    pFriction(cyc)=pFriction(cyc)+2
    If pFriction(cyc)>15 And HumanClear(cyc,270,15) And ItemClear(cyc,270,15) Then pA#(cyc)=270 : ChangeAnim(cyc,41)
   EndIf
- EndIf 
+ EndIf
  ;CLIMB OUT TO APRON
  If TryingToTag(cyc)=0 And InsideRing(pX#(cyc),pZ#(cyc),-15) And pY#(cyc)=wStage# And pPlatform(cyc)=0 And ((pAnim(cyc)=>11 And pAnim(cyc)=<12) Or pAnim(cyc)=202)
   ;north ropes
@@ -1891,8 +1891,8 @@ Function FindClimbing(cyc)
   If SatisfiedAngle(RequestAngle#(cyc),90,accessRange) And pX#(cyc)>blockX2#(4)-2 And pX#(cyc)<blockX2#(4)+2 And pZ#(cyc)>blockZ1#(4)+30 And pZ#(cyc)<blockZ2#(4)-30
    pFriction(cyc)=pFriction(cyc)+2
    If pFriction(cyc)>20 And HumanClear(cyc,90,15) And ItemClear(cyc,90,15)
-    If pCarrying(cyc)=0 Then pPlatform(cyc)=4 : pA#(cyc)=90 : ChangeAnim(cyc,42) 
-    If pCarrying(cyc)>0 Then pPlatform(cyc)=4 : ChangeAnim(cyc,204) 
+    If pCarrying(cyc)=0 Then pPlatform(cyc)=4 : pA#(cyc)=90 : ChangeAnim(cyc,42)
+    If pCarrying(cyc)>0 Then pPlatform(cyc)=4 : ChangeAnim(cyc,204)
    EndIf
   EndIf
  EndIf
@@ -1957,7 +1957,7 @@ Function FindClimbing(cyc)
    If pFriction(cyc)>20 Then pPlatform(cyc)=95 : pA#(cyc)=180 : ChangeAnim(cyc,230)
   EndIf
   ;east side
-  If SatisfiedAngle(RequestAngle#(cyc),90,accessRange) And pX#(cyc)=>blockX2#(0) And pZ#(cyc)>blockZ1#(0)+30 And pZ#(cyc)<blockZ2#(0)-30 
+  If SatisfiedAngle(RequestAngle#(cyc),90,accessRange) And pX#(cyc)=>blockX2#(0) And pZ#(cyc)>blockZ1#(0)+30 And pZ#(cyc)<blockZ2#(0)-30
    pFriction(cyc)=pFriction(cyc)+2
    If pFriction(cyc)>20 Then pPlatform(cyc)=96 : pA#(cyc)=90 : ChangeAnim(cyc,230)
   EndIf
@@ -1995,7 +1995,7 @@ Function FindClimbing(cyc)
   If SatisfiedAngle(RequestAngle#(cyc),90,accessRange) And pX#(cyc)>blockX2#(4)-2 And pX#(cyc)<blockX2#(4)+2
    pFriction(cyc)=pFriction(cyc)+2
    If pFriction(cyc)>10 Or (pControl(cyc)=0 And TryingToTag(cyc)) Then tagger=4
-  EndIf 
+  EndIf
   ;translate into tag?
   If tagger>0
    PositionEntity dummy,pX#(cyc),pY#(cyc),pZ#(cyc)
@@ -2012,8 +2012,8 @@ Function FindClimbing(cyc)
      If cpuBlock=0 And cyc<>v And pTeam(cyc)=pTeam(v) And pRole(v)=0 And pPlatform(v)=tagger
       If count=2 Then range#=16 Else range#=8
       If TagProximity(v,80) And checkX#>pX#(v)-range# And checkX#<pX#(v)+range# And checkZ#>pZ#(v)-range# And checkZ#<pZ#(v)+range#
-       If pAnim(v)<30 Or (pAnim(v)=>190 And pAnim(v)=<199) 
-        InstantTurn(cyc,p(v)) : ChangeAnim(cyc,704) 
+       If pAnim(v)<30 Or (pAnim(v)=>190 And pAnim(v)=<199)
+        InstantTurn(cyc,p(v)) : ChangeAnim(cyc,704)
         InstantTurn(v,p(cyc)) : ChangeAnim(v,705)
        EndIf
       EndIf
@@ -2039,7 +2039,7 @@ End Function
 
 ;PASSAGE CLEAR OF HUMANS?
 Function HumanClear(cyc,angle#,range#)
- ;prepare probe 
+ ;prepare probe
  PositionEntity dummy,pX#(cyc),pY#(cyc),pZ#(cyc)
  RotateEntity dummy,0,angle#,0
  MoveEntity dummy,0,0,range#
@@ -2056,7 +2056,7 @@ End Function
 
 ;PASSAGE CLEAR OF ITEMS?
 Function ItemClear(cyc,angle#,range#)
- ;prepare probe 
+ ;prepare probe
  PositionEntity dummy,pX#(cyc),pY#(cyc),pZ#(cyc)
  RotateEntity dummy,0,angle#,0
  MoveEntity dummy,0,0,range#
@@ -2073,7 +2073,7 @@ End Function
 
 ;PASSAGE CLEAR OF BLOCKS?
 Function BlockClear(cyc,angle#,range#)
- ;prepare probe 
+ ;prepare probe
  PositionEntity dummy,pX#(cyc),pY#(cyc),pZ#(cyc)
  RotateEntity dummy,0,angle#,0
  ;find conflicts
@@ -2098,7 +2098,7 @@ End Function
 
 ;CALCULATE FREE SPACE IN GIVEN ANGLE
 Function MeasureSpace(cyc,angle#,limit)
- ;prepare probe 
+ ;prepare probe
  space=0
  PositionEntity dummy,pX#(cyc),pY#(cyc),pZ#(cyc)
  RotateEntity dummy,0,angle#,0
@@ -2109,7 +2109,7 @@ Function MeasureSpace(cyc,angle#,limit)
   checkX#=EntityX(dummy) : checkZ#=EntityZ(dummy)
   ;human blocks
   For v=1 To no_plays
-   If cyc<>v And AttackViable(v)<>4 And pY#(cyc)=>pY#(v)-30 And pY#(cyc)=<pY#(v)+30 
+   If cyc<>v And AttackViable(v)<>4 And pY#(cyc)=>pY#(v)-30 And pY#(cyc)=<pY#(v)+30
     If checkX#>pX#(v)-10 And checkX#<pX#(v)+10 And checkZ#>pZ#(v)-10 And checkZ#<pZ#(v)+10 Then clear=0
    EndIf
   Next
@@ -2162,12 +2162,12 @@ Function FlightClear(cyc,angle#,range#)
  EndIf
  ;curtain logic
  If pZ#(cyc)<385 And checkZ#>385 Then clear=0
- If pZ#(cyc)>-385 And checkZ#<-385 Then clear=0 
+ If pZ#(cyc)>-385 And checkZ#<-385 Then clear=0
  ;ledge logic
  If pPlatform(cyc)=>10 And pPlatform(cyc)=<90
   block=pPlatform(cyc)-10
   If blockClimb(block)=1 And block<>39 And SatisfiedAngle(angle#,0,90) Then clear=0
-  If blockClimb(block)=2 And block<>39 And SatisfiedAngle(angle#,270,90) Then clear=0 
+  If blockClimb(block)=2 And block<>39 And SatisfiedAngle(angle#,270,90) Then clear=0
   If blockClimb(block)=3 And block<>39 And SatisfiedAngle(angle#,180,90) Then clear=0
   If blockClimb(block)=4 And block<>39 And SatisfiedAngle(angle#,90,90) Then clear=0
   If block=>23 And block=<26
@@ -2181,11 +2181,11 @@ Function FlightClear(cyc,angle#,range#)
  ;cage logic
  If matchCage>0
   If pPlatform(cyc)<90 Or pPlatform(cyc)=>100
-   If InsideRing(pX#(cyc),pZ#(cyc),0) And InsideRing(checkX#,checkZ#,-25)=0 Then clear=0 
-   If InsideRing(pX#(cyc),pZ#(cyc),0)=0 And InsideRing(checkX#,checkZ#,0) Then clear=0 
+   If InsideRing(pX#(cyc),pZ#(cyc),0) And InsideRing(checkX#,checkZ#,-25)=0 Then clear=0
+   If InsideRing(pX#(cyc),pZ#(cyc),0)=0 And InsideRing(checkX#,checkZ#,0) Then clear=0
   EndIf
   If pPlatform(cyc)=>91 And pPlatform(cyc)=<94 And InsideRing(checkX#,checkZ#,-15)=0 Then clear=0
-  If pPlatform(cyc)=>95 And pPlatform(cyc)=<98 And InsideRing(checkX#,checkZ#,0) Then clear=0 
+  If pPlatform(cyc)=>95 And pPlatform(cyc)=<98 And InsideRing(checkX#,checkZ#,0) Then clear=0
  EndIf
  Return clear
 End Function
@@ -2227,7 +2227,7 @@ Function AttackSensible(cyc,v)
     If pRole(v)=<2 And InsideRing(pX#(v),pZ#(v),0)=0 Then sensible=0 ;don't let ref attack well behaved secondaries
     If AttackViable(v)=>3 Then sensible=0 ;don't let ref attack neutralized
    EndIf
-   If pRole(v)=1 
+   If pRole(v)=1
     If matchState=<3 Or pTeam(matchWinner)=pTeam(cyc) Or matchWinner=0 Or pRole(cyc)=1 Then sensible=0 ;don't attack refs
    EndIf
   EndIf
@@ -2237,14 +2237,14 @@ Function AttackSensible(cyc,v)
   ;don't disturb team-mate activity
   If pTeam(pGrappler(v))=pTeam(cyc) Or pTeam(pPinner(v))=pTeam(cyc) Then sensible=0
   ;don't disturb enemy elimination
-  If matchType=5 
+  If matchType=5
    If pGrappling(v)>0 And pTeam(pGrappling(v))<>pTeam(cyc) Then sensible=0
    If pGrappler(v)>0 And pTeam(v)<>pTeam(cyc) Then sensible=0
    If pPinning(v)>0 And pTeam(pPinning(v))<>pTeam(cyc) Then sensible=0
    If pPinner(v)>0 And pTeam(v)<>pTeam(cyc) Then sensible=0
   EndIf
   ;don't disturb referee examinations
-  If matchType=5 And pTeam(v)<>pTeam(cyc) 
+  If matchType=5 And pTeam(v)<>pTeam(cyc)
    If RefViable(v)=3 Or RefViable(v)=4 Or RefViable(v)=13 Or RefViable(v)=14
     For count=1 To no_plays
      If pRole(count)=1 And pRefVictim(count)=v Then sensible=0
@@ -2252,17 +2252,17 @@ Function AttackSensible(cyc,v)
    EndIf
   EndIf
   ;don't disturb beneficial refs
-  If pRole(v)=1 
+  If pRole(v)=1
    If pRefAward(v)>0 And pTeam(pRefAward(v))=pTeam(cyc) Then sensible=0
    If matchType=5 And pRefVictim(v)>0 And pTeam(pRefVictim(v))<>pTeam(cyc) Then sensible=0
   EndIf
  EndIf
  ;inaccessible height
- If pPlatform(cyc)=0 Or (pPlatform(cyc)=>1 And pPlatform(cyc)=<4 And pY#(cyc)=pY#(v)) 
-  If pY#(v)<pY#(cyc)-20 Or pY#(v)>pY#(cyc)+30 Then sensible=0 
+ If pPlatform(cyc)=0 Or (pPlatform(cyc)=>1 And pPlatform(cyc)=<4 And pY#(cyc)=pY#(v))
+  If pY#(v)<pY#(cyc)-20 Or pY#(v)>pY#(cyc)+30 Then sensible=0
  EndIf
  ;inaccessible when getting up
- If AttackViable(v)=>3 And GettingUp(v) Then sensible=0 
+ If AttackViable(v)=>3 And GettingUp(v) Then sensible=0
  Return sensible
 End Function
 
@@ -2277,7 +2277,7 @@ Function NearGrounded(cyc,range#)
  value=0
  If pFoc(cyc)>0
   v=pFoc(cyc)
-  If InProximity(cyc,v,range#) And pY#(v)>pY#(cyc)-10 And pY#(v)<pY#(cyc)+10 
+  If InProximity(cyc,v,range#) And pY#(v)>pY#(cyc)-10 And pY#(v)<pY#(cyc)+10
    If AttackViable(v)=>3 And AttackViable(v)=<4 Then value=1
    If pAnim(v)=>120 And pAnim(v)=<149 And pAnim(v)<>123 And pAnim(v)<>126 And pAnim(v)<>140
     If pAnimTim(v)>20 Then value=1
@@ -2312,7 +2312,7 @@ End Function
 Function FindInteractions(cyc)
  value=0
  ;human interactions
- For v=1 To no_plays 
+ For v=1 To no_plays
   If cyc<>v
    If InProximity(cyc,v,50)
     ;1. request space
@@ -2324,7 +2324,7 @@ Function FindInteractions(cyc)
     EndIf
     ;3. interrupting count
     If matchState=3 And matchCountOuts=>1 And matchCountOuts=<2 And pRole(cyc)=1 And pRole(v)<>1 And pFoc(v)>0
-     If RefViable(pFoc(v))=5 And pOutCount(v)<pOutCount(pFoc(v))-1 And pTeam(v)<>pTeam(pFoc(v))   
+     If RefViable(pFoc(v))=5 And pOutCount(v)<pOutCount(pFoc(v))-1 And pTeam(v)<>pTeam(pFoc(v))
       If InProximity(v,pFoc(v),30) And AttackViable(v)=1 Then pInteract(cyc)=v : value=3
      EndIf
     EndIf
@@ -2336,8 +2336,8 @@ Function FindInteractions(cyc)
   For v=1 To 4
    ;2. unfasten buckle
    limb=FindChild(world,"Ring0"+v)
-   If NearestCorner(pX#(cyc),pZ#(cyc))=v And ReachedCord(pX#(cyc),pZ#(cyc),EntityX(limb,1),EntityZ(limb,1),12) 
-    If padExposed(v)=0 Then value=2 
+   If NearestCorner(pX#(cyc),pZ#(cyc))=v And ReachedCord(pX#(cyc),pZ#(cyc),EntityX(limb,1),EntityZ(limb,1),12)
+    If padExposed(v)=0 Then value=2
    EndIf
   Next
  EndIf
@@ -2364,33 +2364,33 @@ Function RefViable(cyc) ;1-10=checkable, 11-20=declarable, 21+=trivia
   EndIf
   ;22. interrupting count
   If matchState=3 And matchCountOuts=>1 And matchCountOuts=<2 And pFoc(cyc)>0 And LegalMan(pFoc(cyc)) And pTeam(cyc)<>pTeam(pFoc(cyc)) And InsideRing(RealX#(cyc),RealZ#(cyc),-5)=0
-   If InsideRing(RealX#(pFoc(cyc)),RealZ#(pFoc(cyc)),-5)=0 Or (pPlatform(pFoc(cyc))=>95 And pPlatform(pFoc(cyc))=<98) 
+   If InsideRing(RealX#(pFoc(cyc)),RealZ#(pFoc(cyc)),-5)=0 Or (pPlatform(pFoc(cyc))=>95 And pPlatform(pFoc(cyc))=<98)
     If pOutCount(cyc)<pOutCount(pFoc(cyc))-1 And InProximity(cyc,pFoc(cyc),30) And AttackViable(cyc)=1 Then viable=22
    EndIf
   EndIf
   ;match stipulations
   If matchState=3 And LegalMan(cyc) And pOutTim(cyc)>100
    If FallsCount(cyc)
-    ;4. bloodiness 
+    ;4. bloodiness
     If matchBlood>0 And AttackViable(cyc)=>3 And pDT(cyc)>50 And pScar(cyc,1)>0
      viable=4
      If pScar(cyc,1)=>3 Or (optGore=0 And pScar(cyc,1)>0) Then viable=14
     EndIf
     ;3. knocked out
-    If matchKOs>0 And AttackViable(cyc)=>3 And pDT(cyc)>100 
+    If matchKOs>0 And AttackViable(cyc)=>3 And pDT(cyc)>100
      If pHealth(cyc)<1250*optLength Then viable=3
      If pHealth(cyc)<100 Then viable=13
     EndIf
     ;2. hold victim
-    If matchSubs>0 And pGrappler(cyc)>0 And LegalMan(pGrappler(cyc)) And pTeam(pGrappler(cyc))<>pTeam(cyc) 
+    If matchSubs>0 And pGrappler(cyc)>0 And LegalMan(pGrappler(cyc)) And pTeam(pGrappler(cyc))<>pTeam(cyc)
      If pStretched(cyc)>0 Then viable=2
-     If pStretched(cyc)=2 Then viable=12  
+     If pStretched(cyc)=2 Then viable=12
     EndIf
     ;1. pin victim
     If matchPins>0 And pPinner(cyc)>0 And LegalMan(pPinner(cyc)) And pTeam(pPinner(cyc))<>pTeam(cyc) ;And pAnim(pPinner(cyc))<>160
-     viable=1 
+     viable=1
     EndIf
-    If pPinCount(cyc)=>3 Then viable=11 
+    If pPinCount(cyc)=>3 Then viable=11
    EndIf
   EndIf
  EndIf
@@ -2416,7 +2416,7 @@ Function RefActViable(cyc,v)
    If FindInteractions(cyc)<>3
     If mission=5 And pOutsideTim(v)>50
      If InProximity(cyc,v,100) Or InsideRing(pX#(cyc),pZ#(cyc),0) Then viable=1
-     For count=1 To no_plays 
+     For count=1 To no_plays
       If count<>v And RefViable(count)=5 And pOutsideTim(count)>25 Then viable=1
      Next
     EndIf
@@ -2494,7 +2494,7 @@ Function GetNewLegal(cyc)
    If v>no_wrestlers Then v=1
    If cyc=v Or pTeam(v)<>pTeam(cyc) Then satisfied=0
    If pRole(v)>0 Or pEliminated(v) Then satisfied=0
-   its=its+1 
+   its=its+1
    If its>100 Then v=0 : satisfied=1
   Until satisfied=1
   ;make transition
